@@ -2,9 +2,9 @@
 title: "Lecture 1: Introduction to Clinical Trials and Adaptive Designs"
 subtitle: "Uppsala University CIM course"
 author: 
-  - Yevgen Ryeznik <sup>1 &copy;</sup> , Oleksandr Sverdlov <sup>2 &copy;</sup>
+  - Yevgen Ryeznik <sup>1 &copy;</sup>  and Oleksandr Sverdlov <sup>2 &copy;</sup>
 institute: 
-  - <sup>1</sup>Department of Mathematics, Uppsala University, 
+  - <sup>1</sup>Department of Mathematics, Uppsala University 
   - <sup>2</sup>Early Development Biostatistics, Novartis Institutes for Biomedical Research
 date: "`r format(Sys.Date(), '%Y-%m-%d')`"
 params:
@@ -40,7 +40,7 @@ class: inverse, left, middle
 # Agenda
 
 1. Introduction to Clinical Trials and Drug Development
-2. Clinical Trial Design: Basic Elements
+2. Clinical Trial Design
 3. Adaptive Designs
 4. Roadmap for This Course
 
@@ -51,7 +51,7 @@ class: inverse, center, middle
 
 ---
 
-## Clinical Trials (1 of 3)
+# Clinical Trials (1 of 3)
 
 Clinical trial<sup>1</sup> -- a research study conducted to assess the _**utility**_ of an 
 _**intervention in volunteers**_
@@ -68,7 +68,7 @@ _**intervention in volunteers**_
 
 ---
 
-## Clinical Trials (2 of 3)
+# Clinical Trials (2 of 3)
 
 Since clinical trials are experiments in humans, special considerations related to medical ethics and protection of study subjects apply:
 
@@ -85,7 +85,7 @@ Since clinical trials are experiments in humans, special considerations related 
 
 ---
 
-## Clinical Trials (3 of 3)
+# Clinical Trials (3 of 3)
 
 Three important principles in clinical trial design methodology:
 
@@ -120,7 +120,7 @@ An "ideal" design is
 
 ---
 
-## Clinical Development (1 of 3)
+# Clinical Development (1 of 3)
 
 The essence of rational drug development is _**to ask important questions**_ and _**to answer them with appropriate studies**_.
 
@@ -141,7 +141,7 @@ Four types of clinical studies (according to their objectives)<sup>2</sup>:
 
 ---
 
-## Clinical Development (2 of 3)
+# Clinical Development (2 of 3)
 
 Clinical development is ideally a logical, step-wise procedure in which information from small early studies is used to support and plan later larger, more definitive studies<sup>3</sup>.
 
@@ -156,6 +156,108 @@ Clinical development is ideally a logical, step-wise procedure in which informat
 # Clinical Development (3 of 3)
 
 ![](./figures/lecture01-fig02-clinical-trial-phases.png)
+
+---
+
+```{r, echo=FALSE, message=FALSE}
+library(plotly)
+
+x <- seq(0,10, length.out = 1000)
+
+# create data
+aval <- list()
+for(step in 1:11){
+  aval[[step]] <-list(visible = FALSE,
+                      name = paste0('v = ', step),
+                      x=x,
+                      y=sin(step*x))
+}
+aval[3][[1]]$visible = TRUE
+
+# create steps and plot all traces
+steps <- list()
+fig <- plot_ly()
+for (i in 1:11) {
+ fig <- add_lines(fig,x=aval[i][[1]]$x,  y=aval[i][[1]]$y, visible = aval[i][[1]]$visible, 
+                 name = aval[i][[1]]$name, type = 'scatter', mode = 'lines', hoverinfo = 'name', 
+                 line=list(color='00CED1'), showlegend = FALSE)
+
+  step <- list(args = list('visible', rep(FALSE, length(aval))),
+               method = 'restyle')
+  step$args[[2]][i] = TRUE  
+  steps[[i]] = step 
+}  
+
+# add slider control to plot
+fig <- fig %>%
+  layout(sliders = list(list(active = 3,
+                             currentvalue = list(prefix = "Frequency: "),
+                             steps = steps)))
+
+fig
+```
+
+---
+class: inverse, center, middle
+
+# 2. Clinical Trial Design
+
+---
+
+# Clinical Trial Design: Basic Elements
+
+Traditionally, a clinical trial process consists of 4 steps:
+
+1. Design
+2. Conduct
+3. Analysis
+4. Interpretation and dissemination of the results
+
+In this course, we will primarily focus on the _**design**_ part.
+
+---
+
+# Clinical Trial Design: Main Considerations (1 of 2)
+
+Clinical trial team (medical lead, biostatistician, PK scientist, etc.) develops _**clinical trial protocol**_ which contains the following important information:
+
+1. _**Clear formulation of study objectives**_:
+  + e.g., to test that experimental drug results in greater reduction in total cholesterol level than standard of care.
+    
+2. _**Type of a design**_:
+  + e.g., parallel group, crossover, factorial, dose escalation, enrichment, group sequential, or adaptive design.
+    
+3. _**Primary research hypothesis (for confirmatory trials) **_:
+  + test for equality, superiority, non-inferiority, or equivalence.
+
+---
+
+# Clinical Trial Design: Main Considerations (2 of 2)
+
+1. _**Study endpoints (outcome variables)**_
+  + Normal, binary, count, or time-to-event
+    
+5. _**Choice of control group**_
+  + Placebo control, active control, or multiple controls
+    
+6. _**Study population**_
+  + Normal healthy volunteers, patients, or special population (e.g. pediatric or geriartric patients)
+    
+---
+
+# Clinical Trial Design: Statistical Considerations
+
+_**Biostatistician**_ is tasked with providing input on the following:
+
+- Sample size
+
+- Treatment allocation ratio
+
+- Randomization procedure to implement the desired allocation
+
+- Measures to protect study from bias (blinding, allocation concealment)
+
+- Statistical methodology to analyze data
 
 ---
 
