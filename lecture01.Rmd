@@ -40,8 +40,11 @@ class: inverse, left, middle
 # Agenda
 
 1. Introduction to Clinical Trials and Drug Development
+
 2. Clinical Trial Design
+
 3. Adaptive Designs
+
 4. Roadmap for This Course
 
 ---
@@ -158,20 +161,6 @@ Clinical development is ideally a logical, step-wise procedure in which informat
 ![](./figures/lecture01-fig02-clinical-trial-phases.png)
 
 ---
-
-```{r, layout="l-page",echo=FALSE, message=FALSE}
-library(plotly)
-a <- seq(1, 5, by = 0.1)
-t <- seq(-5, 5, length = 100)
-p <- purrr::map_df(a, ~ tibble::tibble(a = .x, t, y = 1/(1 + exp(-.x*t)))) %>% 
-  ggplot(aes(t, y, frame = a))+
-  geom_line()+
-  theme_bw()
-plotly::ggplotly(p)
-```
-
-
----
 class: inverse, center, middle
 
 # 2. Clinical Trial Design
@@ -183,38 +172,51 @@ class: inverse, center, middle
 Traditionally, a clinical trial process consists of 4 steps:
 
 1. Design
+
 2. Conduct
+
 3. Analysis
+
 4. Interpretation and dissemination of the results
 
 In this course, we will primarily focus on the _**design**_ part.
 
 ---
 
-# Clinical Trial Design: Main Considerations (1 of 2)
+# Clinical Trial Design: Main Considerations
 
 Clinical trial team (medical lead, biostatistician, PK scientist, etc.) develops _**clinical trial protocol**_ which contains the following important information:
 
-1. _**Clear formulation of study objectives**_:
+&nbsp;1. _**Clear formulation of study objectives**_:
   + e.g., to test that experimental drug results in greater reduction in total cholesterol level than standard of care.
-    
-2. _**Type of a design**_:
+
+--
+
+&nbsp;2. _**Type of a design**_:
   + e.g., parallel group, crossover, factorial, dose escalation, enrichment, group sequential, or adaptive design.
-    
-3. _**Primary research hypothesis (for confirmatory trials) **_:
+
+--
+
+&nbsp;3. _**Primary research hypothesis (for confirmatory trials) **_:
   + test for equality, superiority, non-inferiority, or equivalence.
 
 ---
 
-# Clinical Trial Design: Main Considerations (2 of 2)
+# Clinical Trial Design: Main Considerations
 
-1. _**Study endpoints (outcome variables)**_
+Clinical trial team (medical lead, biostatistician, PK scientist, etc.) develops _**clinical trial protocol**_ which contains the following important information:
+
+&nbsp;4. _**Study endpoints (outcome variables)**_
   + Normal, binary, count, or time-to-event
-    
-5. _**Choice of control group**_
+
+--
+
+&nbsp;5. _**Choice of control group**_
   + Placebo control, active control, or multiple controls
-    
-6. _**Study population**_
+
+--
+
+&nbsp;6. _**Study population**_
   + Normal healthy volunteers, patients, or special population (e.g. pediatric or geriartric patients)
     
 ---
@@ -233,6 +235,15 @@ _**Biostatistician**_ is tasked with providing input on the following:
 
 - Statistical methodology to analyze data
 
+---
+
+# Study Designs: Fixed vs. Adaptive<sup>4</sup>
+
+![](./figures/lecture01-fig03-fixed-vs-adaptive.png)
+
+.footnote[
+[4] Pallman P, et al. (2018) "_Adaptive designs in clinical trials: why use them, and how to run and report them_", _BMC Medicine_, 16:29.
+]
 ---
 
 As a presentation ninja, you certainly should not be satisfied by the "Hello World" example. You need to understand more about two things:
