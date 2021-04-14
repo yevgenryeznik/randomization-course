@@ -159,7 +159,7 @@ Clinical development is ideally a logical, step-wise procedure in which informat
 
 ---
 
-```{r, echo=FALSE, message=FALSE}
+```{r, layout="l-page",echo=FALSE, message=FALSE}
 library(plotly)
 
 x <- seq(0,10, length.out = 1000)
@@ -196,6 +196,7 @@ fig <- fig %>%
 
 fig
 ```
+
 
 ---
 class: inverse, center, middle
