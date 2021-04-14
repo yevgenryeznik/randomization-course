@@ -1,16 +1,24 @@
 ---
 title: "Optimal designs and randomization techniques for clinical trials"
-author: "Yevgen Ryeznik"
-date: ""
-output: html_document
+description: |
+  Master/Ph.D. level course at the Center for Interdisciplinary Mathematics – CIM, Uppsala University.
+author:
+  - name: Yevgen Ryeznik
+    url: https://example.com/norajones
+    affiliation: Department of Mathematics, Uppsala University
+    affiliation_url: https://math.uu.se/en
+date: "`r format(Sys.Date(), '%Y-%m-%d')`"
+output: distill::distill_article
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
-
-
-**Spring 2018**. Master/Ph.D. level course at the Center for Interdisciplinary Mathematics – CIM, Uppsala University.
+**Spring 2018**.
 
 - [Lecture 1: Introduction to Clinical Trials and Adaptive Designs](lecture01.html)
+
+
+
+
