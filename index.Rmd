@@ -13,4 +13,4 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Spring 2018**. Master/Ph.D. level course at the Center for Interdisciplinary Mathematics – CIM, Uppsala University.
 
-- [Lecture 1](lecture01.html)
+- [Lecture 1: Introduction to Clinical Trials and Adaptive Designs](lecture01.html)
