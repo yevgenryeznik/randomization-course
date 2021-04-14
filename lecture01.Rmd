@@ -158,14 +158,16 @@ Clinical development is ideally a logical, step-wise procedure in which informat
 ![](./figures/lecture01-fig02-clinical-trial-phases.png)
 
 ---
+class: middle
 
 ```{r, layout="l-page",echo=FALSE, message=FALSE}
 library(plotly)
-a <- seq(1, 5, by = 0.5)
+a <- seq(1, 5, by = 0.05)
 t <- seq(-5, 5, length = 100)
 p <- purrr::map_df(a, ~ tibble::tibble(a = .x, t, y = 1/(1 + exp(-.x*t)))) %>% 
   ggplot(aes(t, y, frame = a))+
-  geom_line()
+  geom_line()+
+  theme_bw()
 plotly::ggplotly(p)
 ```
 
