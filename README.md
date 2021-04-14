@@ -1,4 +1,5 @@
-# randomization-course
-Materials of the Ph.D./master course on randomization in clinical trials. The course was taught at Uppsala University in 2018. 
+#  Optimal designs and randomization techniques for clinical trials
 
-- [lecture 1](lecture01.html)
+**Spring 2018**. Master/Ph.D. level course at the Center for Interdisciplinary Mathematics – CIM, Uppsala University.
+
+- [Lecture 1](lecture01.html)
