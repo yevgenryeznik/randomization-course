@@ -103,8 +103,52 @@ class: inverse, center, middle
 
 ---
 
-# Clinical Trials (1 of 3)
+# Maximizing power of a 2-arm comparative trial
 
+- Two groups: Experimental (E) and Control (C).
+- Sample size: a total of `\(n = n_E+n_C\)` subjects:
+  + `\(n_E = \rho n\)` assigned to E, and `\(n_C = (1-\rho)n\)` assigned to C (if necessary, rounded to the integer values).
+  + `\(\rho \in (0, 1)\)` -- "_**allocation ratio**_".
+    
+- Primary outcomes: `\(Y_{ik}\sim Normal(\mu_k, \sigma^2)\)`, `\(k=E,C\)`; `\(i = 1, 2, \ldots, n_k\)`:
+  + `\(\sigma\)` _**is common for both groups, assumed known**_.
+
+- Study objective: to test `\(H_0: \mu_E = \mu_C\)` vs. `\(H_1: \mu_E &gt; \mu_C\)` (experimental is better than control).
+
+- `\(Z\)`-test: reject `\(H_0\)` at level `\(\alpha\)`, if `\(Z = \frac{\overline{Y}_E-\overline{Y}_C}{\sigma\sqrt{\frac{1}{n_E}+\frac{1}{n_C}}} &gt; z_{1-\alpha}\)` 
+  + (e.g., `\(\alpha=0.05 \Rightarrow\)` reject `\(H_0\)` at 5% significance level, if `\(Z &gt; 1.645\)`).
+
+---
+
+# Which allocation maximizes power? (1 of 2)
+
+`$$\begin{aligned}
+ \boldsymbol{Power} &amp;= \text{Pr}(\text{Reject} H_0|n_E, n_C, \mu_E, \mu_C, \sigma^2, z_{1-\alpha}) = \\ \\
+&amp;= \text{Pr}\left(\frac{\overline{Y}_E-\overline{Y}_C}{\sigma\sqrt{\frac{1}{n_E}+\frac{1}{n_C}}} &gt; z_{1-\alpha}\right) \underset{\text{under }H_1}{=} \\
+&amp;\underset{\text{under }H_1}{=} \text{Pr}\left(\underbrace{\frac{\overline{Y}_E-\overline{Y}_C - (\mu_E-\mu_C)}{\sigma\sqrt{\frac{1}{n_E}+\frac{1}{n_C}}}}_{Z_0\sim N(0, 1)\text{ with c.d.f. }\Phi(z)} + \underbrace{\frac{(\mu_E-\mu_C)}{\sigma\sqrt{\frac{1}{n_E}+\frac{1}{n_C}}}}_{\Delta &gt; 0 \text{ (}\mu_E&gt;\mu_C\text{ under }H_1\text{)}} &gt; z_{1-\alpha}\right) = \\ \\
+&amp;= \text{Pr}\left(Z_0+\Delta &gt; z_{1-\alpha}\right) = 1-\Phi\left(z_{1-\alpha}-\Delta\right) \Rightarrow
+\end{aligned}$$`
+
+--
+
+`$$\\ \boxed{\max_{\rho \in (0, 1)}\boldsymbol{Power} \Leftrightarrow \min_{\rho \in (0, 1)}\Phi\left(z_{1-\alpha}-\Delta\right) \Leftrightarrow \max_{\rho \in (0, 1)}\Delta}$$`
+---
+
+# Which allocation maximizes power? (2 of 2)
+
+- `\(\max\limits_{\rho \in (0,1)}\Delta = \max\limits_{\rho \in (0,1)}\frac{\mu_E-\mu_C}{\sigma\sqrt{\frac{1}{n\rho}+\frac{1}{n(1-\rho)}}}\)`.
+
+- Equivalently, `\(\min\limits_{\rho \in (0,1)}\left(\frac{1}{n\rho}+\frac{1}{n(1-\rho)}\right)\)`.
+
+- Optimal solution is `\(\boldsymbol{\rho^* = \frac{1}{2}}\)` (_**equal allocation**_).
+
+&lt;span style="background-color: #2F4F4F; color:white"&gt;
+Therefore, for a 2-arm comparative trial with normal outcomes (with known variance, common to 2 groups), equal allocation `\(\left(n_E=n_c=\frac{n}{2}\right)\)` maximizes the power of `\(Z\)`-test for treatment comparison.
+&lt;/span&gt;
+
+.footnote[
+[**Note**] Same result is obtained, if we consider a 2-sample `\(t\)`-test instead of `\(Z\)`-test.
+]
 
 
 ---
