@@ -8,6 +8,8 @@
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link href="libs/lightable/lightable.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -131,7 +133,7 @@ Four types of clinical studies (according to their objectives)&lt;sup&gt;2&lt;/s
     
 
 .footnote[
-[2] ICH E8 Guideline (1997) "_General Considerations for Clinical Trials_"
+[2] ICH E8 Guideline (1997) "_General Considerations for Clinical Trials_".
 ]
 
 ---
@@ -163,13 +165,13 @@ class: inverse, center, middle
 
 Traditionally, a clinical trial process consists of 4 steps:
 
-1. Design
+1. Design.
 
-2. Conduct
+2. Conduct.
 
-3. Analysis
+3. Analysis.
 
-4. Interpretation and dissemination of the results
+4. Interpretation and dissemination of the results.
 
 In this course, we will primarily focus on the _**design**_ part.
 
@@ -199,17 +201,17 @@ Clinical trial team (medical lead, biostatistician, PK scientist, etc.) develops
 Clinical trial team (medical lead, biostatistician, PK scientist, etc.) develops _**clinical trial protocol**_ which contains the following important information:
 
 &amp;nbsp;4. _**Study endpoints (outcome variables)**_
-  + Normal, binary, count, or time-to-event
+  + Normal, binary, count, or time-to-event.
 
 --
 
 &amp;nbsp;5. _**Choice of control group**_
-  + Placebo control, active control, or multiple controls
+  + Placebo control, active control, or multiple controls.
 
 --
 
 &amp;nbsp;6. _**Study population**_
-  + Normal healthy volunteers, patients, or special population (e.g. pediatric or geriartric patients)
+  + Normal healthy volunteers, patients, or special population (e.g. pediatric or geriartric patients).
     
 ---
 
@@ -217,15 +219,15 @@ Clinical trial team (medical lead, biostatistician, PK scientist, etc.) develops
 
 _**Biostatistician**_ is tasked with providing input on the following:
 
-- Sample size
+- Sample size;
 
-- Treatment allocation ratio
+- Treatment allocation ratio;
 
-- Randomization procedure to implement the desired allocation
+- Randomization procedure to implement the desired allocation;
 
-- Measures to protect study from bias (blinding, allocation concealment)
+- Measures to protect study from bias (blinding, allocation concealment);
 
-- Statistical methodology to analyze data
+- Statistical methodology to analyze data.
 
 ---
 
@@ -239,13 +241,817 @@ _**Biostatistician**_ is tasked with providing input on the following:
 
 ---
 
+# Traditional (Fixed) Study Design -- Sample Size
+
+A parallel group trial comparing Experimental (E) vs. Control (C) treatment w.r.t. a primary endpoint which is assumed to be normally distributed (e.g. _**change from baseline to week 6 in total cholesterol level**_).
+
+- `\(\tau\)` = mean treatment difference (E minus C)
+- To test `\(H_0: \tau = 0\)` (no difference) vs. `\(H_1: \tau \ne 0\)` (treatment effects are different).
+- 2-sample `\(t-\)`test: `\(t = \frac{\overline{Y}_E-\overline{Y}_C}{s_p\sqrt{\frac{1}{n_E}+\frac{1}{n_C}}}\)`, where `\(s^2_p = \frac{(n_E-1)s^2_E + (n_C-1)s^2_C}{n_E+n_C-2}\)` -- pooled SD.
+- `\(H_0\)` is rejected in favor to `\(H_1\)` (i.e. we conclude "_**there is a statistically significant difference between treatments E and C**_") at 5% significance level (2-sided), if `\(|t| &gt; t_{0.975}(n_E+n_C-2)\)`, where `\(t_{0.975}(n_E+n_C-2)\)`  is a 97.5%-percentile of the `\(t\)` distribution with `\(n_E+n_C-2\)` degrees of freedom.
+ 
+---
+
+# How Large Should be Our Study?
+
+_**Design parameters (to be determined by experimenter)**_:
+
+- `\(\alpha\)` = probability of rejecting `\(H_0\)`, given that `\(H_0\)` is true (the chance of false-positive result).
+
+- `\(\beta\)` = probability of not rejecting `\(H_0\)`, given that `\(H_1\)` is true (the chance of false-negative result).
+
+- `\(\Delta\)` = "clinically relevant" treatment difference (under `\(H_1\)`).
+
+- `\(\sigma\)` = presumed standard deviation of the primary outcome (assumed to be equal for E and C).
+ 
+---
+
+# How Large Should be Our Study?
+
+Assuming equal `\((1:1)\)` allocation, the _**sample size per treatment arm**_ `\((n)\)` is determined to satisfy two major conditions:
+
+
+`$$\alpha = \text{Pr}\left(\text{Reject }H_0|\tau = 0\right)\text{  and  }1-\beta = \text{Pr}\left(\text{Reject }H_0|\tau = \Delta\right).$$`
+--
+
+The _**sample size per treatment arm**_ is:
+
+`$$n = \frac{2\sigma^2\left(z_{\frac{\alpha}{2}}+z_{\beta}\right)}{\Delta^2},$$`
+where `\(z_c\)` is the `\(100\cdot(1-c)\%\)`-th percentile of the standard normal distribution.
+
+---
+
+# How Large Should be Our Study?
+
+Properties of `\(n\)` as a function of `\((\alpha, \beta, \Delta, \sigma)\)`: 
+
+- `\(n\)` is increasing in `\(\sigma\)`.
+
+- `\(n\)` is inversly proportional to `\(\Delta^2\)`.
+
+- The smaller are the values of `\(\alpha\)` and `\(\beta\)`, the larger is `\(n\)` (this is because `\(z_{\frac{\alpha}{2}}\)` and `\(z_{\beta}\)` increase as `\(\alpha\)` and `\(\beta\)` decrease).
+
+---
+
+# How Large Should be Our Study?
+
+_**Note the following important limitations**_:
+
+- The formula for `\(n\)` was derived for a specific outcome (normal), specific test, assuming known variance `\(\sigma^2\)`.
+
+- In practice: the true value of `\(\sigma^2\)` is unknown and one should rely on estimates of `\(\sigma^2\)` from previous similar studies.
+
+- There is no agreed standard for choosing a clinically relevant difference `\(\Delta\)`.
+
+- There is no agreed standard for choosing `\(\alpha\)` and `\(\beta\)`.
+
+--
+
+_**Question: Can we be more flexible?**_
+
+---
+class: inverse, center, middle
+
+# 3. Adaptive Designs
+
+---
+
+# Motivation for Adaptive Designs
+
+Uncertainty in trial assumptions (treatment effect, variance, dropout rate) increase risk of trial failure.
+
+- The earlier the stage of development, the higher is uncertainty in these assumptions.
+    
+Having an option to modify trial based on interim results from the trial (_**adaptive design**_) is attractive.
+
+- Reduced uncertainty, better decisions, reduced development time.
+
+---
+# What is an Adaptive Design?
+
+.pull-left[
+![](./figures/lecture01-fig04-ad-in-ct-by-gallo.png)
+]
+
+.pull-right[
+- _**Adaptive design**_ -- a clinical study design that uses accumulating data to decide how to modify aspects of the study as it continues, without undermining the _integrity_ and _validity_ of the trial.
+
+- _**Integrity**_ refers to the credibility of the results and _**validity**_ refers to being able to make scientifically sound inferences.
+
+- Adaptation is a _**design feature**_ aimed to enhance the trial, not a remedy for inadequate planning.
+]
+
+---
+
+# What are Potential Benefits of Adaptive Designs?
+
+ADs in exploratory trials:
+
+- _**Dose finding**_ `\(\rightarrow\)` More accurate estimates of maximum tolerated dose (MTD) and other parameters of dose-toxicity curve.
+
+- _**Dose ranging**_ `\(\rightarrow\)` More accurate characterization of dose-response curve and higher chance of taking right dose(s) into confirmatory trials.
+
+--
+
+ADs in confirmatory trials:
+
+- _**Group sequential designs**_ `\(\rightarrow\)` Early stopping for efficacy, futility, or safety.
+    
+- _**Sample size reassessment**_ `\(\rightarrow\)` Alleviate incorrect assumptions on the outcome variance and /or on the treatment effect.
+    
+- _**Population-enrichment**_ `\(\rightarrow\)` Eliminate nonperforming subgroup(s) at IA; focus on subpopulation that is more likely to benefit from treatment.
+  
+--
+
+_**In addition**_: ADs facilitate a lot of upfront thinking and discussion with stakeholders
+
+---
+
+# What are Potential Challenges of Adaptive Designs?
+
+_**Statistical**_: 
+
+- Modifications in the AD introduce bias to the data accumulated from the trial; statistical inferences on the treatment effect (point estimates, confidence intervals and `\(p\)`-values) need to account for adaptation taken.
+
+--
+
+_**Operational**_:
+
+- More upfront planning is needed for ADs compared to traditional designs.
+
+- Robust infrastructure to implement design adaptations must be in place.
+
+- Unblinding of interim data can introduce operational bias.
+
+- Speed of recruitment impacts feasibility of ADs: the faster subjects are recruited, the less opportunity there is for adaptation.
+
+--
+
+_**Regulatory**_:
+
+- Regulators review proposals with confirmatory ADs with higher scrutiny due to limited experience and concerns about control type I error rate.
+
+---
+
+# What Regulatory Guidelines Are Available?
+
+
+.center[
+**FDA (2010)**
+
+&lt;img src="./figures/lecture01-fig05-fda2010.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# What Regulatory Guidelines Are Available?
+
+.center[
+**FDA (2016)**
+
+![](./figures/lecture01-fig06-fda2016.png)
+]
+
+---
+
+# What Regulatory Guidelines Are Available?
+
+.center[
+**EMA (2007)**
+
+![](./figures/lecture01-fig07-ema2007.png)
+]
+
+---
+
+# Uptake of Adaptive Designs in Clinical Development
+
+.pull-left[
+Uptake of ADs is gaining traction and increasing.
+
+![](./figures/lecture01-fig08-uptake-of-ad.png)
+]
+
+.pull-right[
+
+_**Oncology**_ is the main TA of application; other areas include: 
+  + _**Mental health**_
+  + _**Musculoskeletal**_
+  + _**Oral and gastroenterology**_
+    
+Phase I was excluded from the review; _**the majority of ADs are in Phase II trials**_ (which is reflective of regulatory guidance).
+
+_**Group Sequential Design**_ (GSD) is _**most popular**_ type of AD in _**Phase III**_.
+
+]
+
+---
+
+# Classification of Adaptive Designs
+
+&lt;img src="./figures/lecture01-fig09-classification-of-ad.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Exploratory -- Dose Escalation
+
+.left-column[
+![](./figures/lecture01-fig09-exploratory-01.png)
+]
+
+.right-column[
+Dose escalation trials are conducted in phase I:
+  
+- _**Primary goal**_: evaluate clinically safety and PK; in oncology -- evaluate dose-toxicity relation and establish MTD.
+]
+
+---
+
+# Exploratory -- Dose Escalation
+
+.left-column[
+![](./figures/lecture01-fig09-exploratory-01.png)
+]
+
+.right-column[
+For _**safety/ethical**_ reasons, subjects are assigned to increased dose levels in a staggered manner:
+
+- Only when the previous dose is deemed safe will the next cohort be assigned to the next dose-level.
+
+- Next dose is determined based on previous data `\(\rightarrow\)` dose escalation studies are naturally _**adaptive**_.
+]
+
+---
+
+# Exploratory -- Dose Escalation
+
+.left-column[
+![](./figures/lecture01-fig09-exploratory-01.png)
+]
+
+.right-column[
+One famous example of an adaptive dose-escalation design:
+
+- _**Continual Reassessment Method (CRM)**_ developed by O'Quigley et al. (1990)&lt;sup&gt;5&lt;/sup&gt; and its numerous extensions.
+]
+
+.footnote[
+[5] O'Quigley J, Pepe M, Fisher L (1990)  "_Continual reassessment method: a practical design for phase I clinical studies in cancer_." _Biometrics_, **27**, 33–48.
+]
+
+---
+
+# Exploratory -- Dose Ranging
+
+.left-column[
+![](./figures/lecture01-fig09-exploratory-02.png)
+]
+
+.right-column[
+Dose ranging trials are conducted in phase II:
+
+- Randomized, placebo- and/or active-controlled, with several dose levels of an investigational drug, sample sizes up to several hundred patients.
+  
+- _**Usual goal**_ `\(\rightarrow\)` investigate dose-response relationship with respect to some primary efficacy outcome and identify most promising dose(s) to be tested in subsequent confirmatory trials.
+]
+
+---
+
+# Exploratory -- Dose Ranging
+
+.left-column[
+![](./figures/lecture01-fig09-exploratory-02.png)
+]
+
+.right-column[
+Types of dose ranging trials:
+
+- _**"Traditional"**_ `\(\rightarrow\)` fixed design comparing control arm vs. all active arms via contrast tests based on an ANOVA model.
+
+- _**"Adaptive analysis" methods**_ `\(\rightarrow\)` most appropriate dose-response model (from a pre-specified set) is chosen for data analysis `\(\rightarrow\)` _**MCP-Mod**_.
+
+- _**"Adaptive design" methods**_ `\(\rightarrow\)` dose levels can be added/dropped; randomization ratio/sample size can be adjusted based on IA results.
+]
+
+---
+
+# MCM-Mod Methodology&lt;sup&gt;6&lt;/sup&gt;
+
+Combines multiple comparisons (MCP) with dose-response modeling (Mod).
+
+&lt;img src="./figures/lecture01-fig10-mcp-mod.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+.footnote[
+[6] Bretz F, Pinheiro JC, Branson M (2005)  "_Combining multiple comparisons and modeling techniques in dose-response studies_." _Biometrics_, **61**, 738–748.
+]
+
+---
+
+# MCM-Mod Methodology&lt;sup&gt;6&lt;/sup&gt;
+
+.pull-left[
+
+CHMP-qualified methodology
+
+&lt;img src="./figures/lecture01-fig11-chmp.png" width="95%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+- _"... The MCP-Mod approach is efficient in the sence that it **uses the available data better** than the commonly applied pairwise comparisons ..."_
+
+- _"... the methodological approach will promote **better trial designs** incorporating a wider dose range and increased number of dose levels..."_
+
+]
+
+.footnote[
+[6] Bretz F, Pinheiro JC, Branson M (2005)  "_Combining multiple comparisons and modeling techniques in dose-response studies_." _Biometrics_, **61**, 738–748.
+]
+
+---
+
+# Adaptive Randomization (will be discussed in very much detail in this course)
+
+.left-column[
+![](./figures/lecture01-fig09-exploratory-03.png)
+]
+
+.right-column[
+
+Treatment allocation sequence is generated dynamically, based on accumulating data in the trial _**to achieve specific experimental objectives**_ while maintaining validity and integrity of the trial results.
+
+&lt;table class="table table-striped" style="font-size: 16px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Randomization &lt;/th&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Purpose &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Allocation-adaptive &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; To achive desired treatment allocation ratio &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Covariate-adaptive &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; To balance treatment arms with respect to important prognostic covariates &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Response-adaptive &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; To increase allocation frequency to an empirically better treatment &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Covariate-adjusted response-adaptive &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; A combination of covariate adaptive and response-adaptive randomization &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+
+---
+
+# Why Response-Adaptive Randomization?
+
+_**Ethical consideration**_ `\(\rightarrow\)` to assign more trial patients to the empirically better treatment(s):
+
+- When disease is severe or life threatening, even modest reduction in treatment failures can be viewed as ethically significant.
+
+- When disease is (very) rare `\(\rightarrow\)` majority of patients with the disease will be treated within the trial.
+ 
+--
+
+_**Statistical considerations**_ `\(\rightarrow\)` to increase allocation to treatment(s) that maximize information for the selected experimental objectives.
+
+- Skewed allocation (favoring more variable arms) can lead to more accurate estimates or more powerful tests.
+
+- Phase II dose-ranging studies `\(\rightarrow\)` to increase allocation frequency at doses located at the "interesting part" of dose-response curve.
+ 
+---
+
+# Recent Example of RAR (1 of 3)
+
+Adaptive, dose-finding phase II trial evaluating the safety and efficacy of ABT-089 in patients with _**mild to moderate Alzheimer disease**_&lt;sup&gt;7&lt;/sup&gt;.
+
+- Primary objective:
+
+  + Identify _**ED90**_ (lowest dose of ABT-089 that results in 90% of the maximal effect compared to placebo) and _**the minimum effective dose (MED)**_ -- lowest dose of ABT-089 that results in `\(\geq\)` 1.75-point ADAS-Cog improvement over placebo in mean change from baseline.
+    
+- Primary outcome:
+
+  + Change from day -1 to week 12 on the ADAS-Cog.
+    
+    
+.footnote[
+[7] Lenz RA, Pritchett YL, Berry SM et al (2015)  "_Adaptive, dose-finding phase 2 trial evaluating the safety and efficacy of ABT-089 in mild to moderate Alzheimer disease_." _Alzheimer Disease and Associated Disorders_, **29**(3), 192–199.
+]
+
+---
+
+# Recent Example of RAR (2 of 3)
+
+Bayesian response-adaptive randomization design:
+
+- 6 dose groups of ABT-089 and placebo; maximum sample size for the study was set to 400 patients.
+
+- Initial patients were randomized in equal proportions until each group had at least 5 patients.
+
+- Subsequently randomization probabilities to ABT-089 groups were calculated adaptively (updates made at 2-week intervals), based on accumulating ADAS-Cog data, to increase allocation to doses viewed empirically as _**MED**_ and _**ED90**_.
+
+- Randomization ratio for placebo was fixed at 0.20, subsequently adjusted to 0.35 based on the recommendation of DMC (due to higher than usual placebo response).
+    
+- Stopping criteria for futility or success were pre-specified.
+
+---
+
+# Recent Example of RAR (3 of 3)    
+
+.pull-left[
+The study stopped for futility after randomization of 337 patients.
+
+&lt;img src="./figures/lecture01-fig12-rar-example.png" width="105%" style="display: block; margin: auto;" /&gt;
+
+_**RAR design enabled examination of a broad dose range, rapid determination of futility, and limited patient exposure to non-efficacious doses**_.
+
+]
+
+.pull-right[
+
+- Unequal allocation of patients across ABT-089 doses -- larger numbers at higher doses.
+
+- Posterior mean change from baseline of ADAS-Cog for ABT-089 groups ranged from `\(-0.31\)` to `\(-0.02\)`; _**all 95% credible intervals included 0**_.
+
+- Bayesian posterior probabilities that AT-089 would result in `\(\geq\)` 1.75-point ADAS-Cog improvement over PBO were _** `\(&lt;1\)`% for each ABT-089 dose**_.
+]
+
+---
+
+# Seamless Phase II/III Design
+
+.left-column[
+
+![](./figures/lecture01-fig13-dose-selection.png)
+
+]
+
+.right-column[
+
+&lt;img src="./figures/lecture01-fig14-seamless-trial.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+.footnote[
+Schematic taken from McEntegart D, Nicholls G, Byrom B (2007) "_Blinded by science with adaptive designs_." _Applied Clinical Trials_.
+]
+
+---
+
+# Seamless Phase II/III Design
+
+.left-column[
+
+![](./figures/lecture01-fig13-dose-selection.png)
+
+]
+
+.right-column[
+
+- Combines "dose selection" (Phase II) and "confirmation" (Phase III) in a single protocol `\(\rightarrow\)` _**"operationally seamless"**_
+
+- If data collected in the Phase II part is used for testing the null hypothesis of the confirmatory part `\(\rightarrow\)` _**"inferentially seamless"**_
+
+]
+
+---
+
+# Seamless Phase II/III Can Be Useful in Trials for Secondary Progressive Multiple Sclerosis
+
+.pull-left[
+
+&lt;img src="./figures/lecture01-fig15-seamless-paper01.png" width="110%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+&lt;img src="./figures/lecture01-fig15-seamless-paper02.png" width="110%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Adaptive Designs for Confirmatory Studies
+
+.pull-left[
+
+&lt;img src="./figures/lecture01-fig16-confirmatory-paper01.png" width="110%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+- An overview over historical developments of ADs.
+
+- Main statistical principles and recent developments _**on confirmatory ADs**_.
+
+- Perspectives from the pharma industry and regulatory agencies.
+
+- Case studies on _**sample size reassessment**_, _**treatment selection**_, and, _**adaptations in pediatric studies**_.
+
+- An overview of statistical software.
+
+]
+
+---
+
+# Confirmatory -- Group Sequential Designs (GSDs)
+
+.left-column[
+
+![](./figures/lecture01-fig17-confirmatory-01.png)
+
+]
+
+.right-column[
+
+- GSDs allow interim decisions based on accumulating data while maintaining overall type I error rate:
+
+  + _**Stop early for efficacy**_ `\(\rightarrow\)` bring efficacious treatments to market faster.
+  
+  + _**Stop early for futility**_ `\(\rightarrow\)` avoid unnecessary exposure of patients to futile treatments; reduce the overall study cost.
+    
+- GSDs have _**well established statistical theory**_.
+- CSDs are _**well accepted by regulators**_:
+
+  + _"Adaptive Designs which properties are well understood"_.
+]
+
+---
+
+# Confirmatory -- Blinded Sample Size Reassessment
+
+.left-column[
+
+![](./figures/lecture01-fig17-confirmatory-02.png)
+
+]
+
+.right-column[
+
+- Sample size calculation involves nuisance parameters:
+
+  + _**Standard deviation**_ for continuous outcomes; _**underlying event rate**_ for binary outcomes; subject _**drop-out rate**_.
+    
+- _**Blinded SSR**_ `\(\rightarrow\)` interim blinded data are pooled across treatment arms to re-estimate nuisance parameters and update (increase) the trial sample size:
+
+  + _**Helps mitigate impact of incorrect assumptions on study power**_.
+    
+- Statistical properties of blinded SSR methods are well established.
+
+- Blinded SSR methods are _**well accepted by regulators**_.
+
+]
+
+---
+
+# Confirmatory -- Subpopulation Selection
+
+.left-column[
+
+![](./figures/lecture01-fig17-confirmatory-03.png)
+
+]
+
+.right-column[
+
+- For some treatments (e.g. targeted agents), there is a biological rationale to consider an AD with interim population selection.
+
+&lt;img src="./figures/lecture01-fig18-decision-at-IA.png" width="95%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.footnote[
+
+Schematic is taken from Maca J, Dragalin V, Gallo P(2014)  "_Adaptive clinical trials: overview of phase III designs and challenges_." _Therapeutic Innovation and Regulatory Science_, 
+**48**(1), 31–40.
+
+]
+
+---
+
+# Confirmatory -- Subpopulation Selection
+
+.left-column[
+
+![](./figures/lecture01-fig17-confirmatory-03.png)
+
+]
+
+.right-column[
+
+- If subpopulation is selected at IA `\(\rightarrow\)` sample size for the subpopulation may need to be increased (to achieve good power).
+
+- Simulations are necessary to calibrate timing of IA, sample size, power, subpopulation selection rule for the best design performance.
+
+]
+
+---
+
+# Summary -- Benefits and Limitations of Adaptive Designs
+
+&lt;table class="table table-striped" style="font-size: 11px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Phase &lt;/th&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Adaptive Design &lt;/th&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Benefits &lt;/th&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Limitations &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; I &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Dose escalation &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Flexible; can incorporate historical data via prior distributions (Bayesian); can identify MTD and other parameters of interest more precisely and with lower sample size that SAD/MAD dose escalation designs &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Sensitivity to the choice of prior distribution and model assumption; careful calibrations via simulation are required &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; II &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Adaptive dose ranging &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Promising when the initial design is not good and/or interim parameter estimates have low variability; can increase precision in estimating dose-response curve &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Outcome must be a short-term endpoint; collected data should be quickly available for interim analysis and design adaptations &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; II &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Adaptive randomization &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Addresses ethical concerns (more patients allocated to the empirically better treatment); can increase statistical efficiency (precision/power) &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Cautioned by the FDA in the confirmatory setting &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; II/III &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Seamless phase II/III &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Avoidance of administrative wait between phase II and III protocol activation; can help reduce the development time &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; 'Firewall charter' must be in place to maintain trial integrity; proper statistical adjustments are required to account for interim selection / combination of data from phase II and III &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; III &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Group Sequential Designs &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Enables early stopping for efficacy, futility, or harm; viewed as 'well understood' by FDA &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Cannot alter maximum sample size or events in an unblinded manner; uses nonconventional parameter estimates and confidence intervals &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; III &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Sample size reassessment &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Can help mitigate impact of incorrect assumptions on study power &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Unblinded SSR requires strict firewalls to prevent leakage of interim information; uses nonconventional parameter estimates and confidence intervals &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; III &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Subpopulation selection &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Can eliminate nonperforming subgroup(s) at interim analysis and focus on subpopulation that is more likely to benefit from treatment &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Sample size for the subpopulation may need to be increased; requires careful calibration via simulation and special statistical analysis approaches &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+# Analogy Between Adaptive Designs and Swiss Army Knife&lt;sup&gt;8&lt;/sup&gt;
+
+.left-column[
+
+&lt;img src="./figures/lecture01-fig19-scissor.png" width="80%" style="display: block; margin: auto auto auto 0;" /&gt;&lt;img src="./figures/lecture01-fig19-swiss-army-knife.png" width="80%" style="display: block; margin: auto auto auto 0;" /&gt;&lt;img src="./figures/lecture01-fig19-giant-swiss-army-knife.png" width="80%" style="display: block; margin: auto auto auto 0;" /&gt;
+
+]
+
+.right-column[
+
+- _**Simple scissor**_ -- an optimal tool for a special task.
+
+- _**Swiss Army knife**_ -- a versatile tool that combines several individual functions in a single unit.
+
+- _**Giant Swiss Army knife**_ -- a versatile tool that combines several individual functions in a single unit.
+  - Functions for every perceivable need.
+  - Looks impressive.
+  - Highly impracticable.
+  - Very expensive.
+]
+
+
+.footnote[
+
+[8] Bretz F, Gallo P, Maurer W (2017)  "_Adaptive designs: The Swiss Army knife among clinical trial designs?_." _Clinical Trials_, **14**(5), 417–424.
+
+]
+
+---
+
+# Adaptive Designs: Take-Home Messages
+
+- Adaptive designs, when properly implemented, present advantages of improving the flexibility and efficiency of clinical trials.
+
+- The field of adaptive trials is expanding, particularly in early (exploratory) clinical development; faster Go/No-Go decisions is the top driver.
+
+- Adaptive designs require more upfront planning than conventional trials; yet such investment is often justified.
+
+- Adaptive design trial is always a collaborative effort (biostatistics, data management, clinical research, clinical operations, clinical drug supply).
+
+- In the future, wider acceptance among stakeholders involved in clinical R&amp;D can be expected.
+
+---
+class: inverse, center, middle
+
+# 4. Roadmap for This Course
+
+---
 class: center, middle
 
-# Thanks!
+&lt;table class="table table-striped" style="font-size: 18px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Lecture &lt;/th&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Description &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Introduction to Clinical Trials and Adaptive Designs &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Choice of the Target Allocation Ratio in Clinical Trials &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Randomization Designs for Two-Arm Clinical Trials with Equal Allocation &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Randomization Designs for Multi-Arm Clinical Trials with Equal or Unequal Allocation &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Stratified and Covariate-Adaptive Randomization &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Optimal Response-Adaptive Randomization &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Bayesian Adaptive Randomization &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #5499C7 !important;"&gt; Optimal and Adaptive Designs for Quantal Dose-Response Problems &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #1ABC9C !important;"&gt; Case Studies &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
-Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
+---
 
-The chakra comes from [remark.js](https://remarkjs.com), [**knitr**](https://yihui.org/knitr), and [R Markdown](https://rmarkdown.rstudio.com).
+# Homework for Lecture 1 (1 of 2)
+
+_**True**_ or _**False**_?
+
+- An adaptive design can help mitigate uncertainty in trial assumptions (treatment effect, variance, dropout rate).
+
+- Adaptive designs are applied only in exploratory (phase I and II) clinical development.
+
+- All dose-escalation study designs are naturally adaptive.
+
+- The main drivers for response-adaptive randomization are ethical and statistical efficiency considerations.
+
+- Adaptive designs generally require more upfront planning than designs with a fixed sample size.
+
+---
+
+# Homework for Lecture 1 (2 of 2)
+
+Read the paper 
+
+- Lenz RA, Pritchett YL, Berry SM, et al (2015) "_Adaptive, dose-finding phase 2 trial evaluating the safety and efficacy of ABT-089 in mild to moderate Alzheimer disease._", _Alzheimer Disease and Associated Disorders_, **29**(3), 192-199.
+
+1. What adaptive elements can you identify in this study?
+
+2. Did the study meet its objective? Was the adaptive design useful?
+
+---
+class: inverse, center, middle
+
+# Thanks you!
+
+.footnote[
+Slides are created via the R package [**xaringan**](https://github.com/yihui/xaringan).
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
