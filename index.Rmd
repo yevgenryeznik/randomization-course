@@ -18,6 +18,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 
 - [Lecture 1: Introduction to Clinical Trials and Adaptive Designs](lecture01.html)
+- [Lecture 2: Choice of the Target Allocation Ratio in Clinical Trials](lecture02.html)
 
 
 

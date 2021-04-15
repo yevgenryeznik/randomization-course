@@ -9,8 +9,8 @@ institute:
 date: "`r format(lubridate::ymd('20180402'), '%B %d, %Y')`"
 params:
   show_code: FALSE
-  blue_color: "#5499C7"
-  green_color: "#1ABC9C"
+  tbl_color1: "#2F4F4F"
+  tbl_color2: "#708090"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -616,8 +616,8 @@ rnd_table <- data.frame(
 
 knitr::kable(rnd_table, "html", col.names = c("Randomization", "Purpose")) %>%
   kable_styling(bootstrap_options = "striped", font_size = 16) %>%
-  row_spec(c(0, 2, 4), bold = TRUE, color = "white", background = params$blue_color) %>%
-  row_spec(c(1, 3), bold = TRUE, color = "white", background = params$green_color)
+  row_spec(c(0, 2, 4), bold = TRUE, color = "white", background = params$tbl_color1) %>%
+  row_spec(c(1, 3), bold = TRUE, color = "white", background = params$tbl_color2)
 ```
 
 ]
@@ -898,8 +898,8 @@ tribble(
 ) %>% 
   knitr::kable("html", escape = F) %>%
   kable_styling(bootstrap_options = "striped", font_size = 11) %>%
-  row_spec(c(0, 2, 4, 6), bold = TRUE, color = "white", background = params$blue_color) %>%
-  row_spec(c(1, 3, 5, 7), bold = TRUE, color = "white", background = params$green_color)
+  row_spec(c(0, 2, 4, 6), bold = TRUE, color = "white", background = params$tbl_color1) %>%
+  row_spec(c(1, 3, 5, 7), bold = TRUE, color = "white", background = params$tbl_color2)
 ```
 
 ---
@@ -973,8 +973,8 @@ tribble(
 ) %>% 
   knitr::kable("html", escape = F) %>%
   kable_styling(bootstrap_options = "striped", font_size = 18) %>%
-  row_spec(c(0, 2, 4, 6, 8), bold = TRUE, color = "white", background = params$blue_color) %>%
-  row_spec(c(1, 3, 5, 7, 9), bold = TRUE, color = "white", background = params$green_color)
+  row_spec(c(0, 2, 4, 6, 8), bold = TRUE, color = "white", background = params$tbl_color1) %>%
+  row_spec(c(1, 3, 5, 7, 9), bold = TRUE, color = "white", background = params$tbl_color2)
 ```
 
 ---
