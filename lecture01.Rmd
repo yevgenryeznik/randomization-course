@@ -6,7 +6,7 @@ author:
 institute: 
   - <sup>1</sup>Department of Mathematics, Uppsala University 
   - <sup>2</sup>Early Development Biostatistics, Novartis Institutes for Biomedical Research
-date: "`r format(Sys.Date(), '%Y-%m-%d')`"
+date: "`r format(lubridate::ymd('20180402'), '%B %d, %Y')`"
 params:
   show_code: FALSE
   blue_color: "#5499C7"
