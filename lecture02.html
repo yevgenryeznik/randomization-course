@@ -10,6 +10,14 @@
     <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
     <script src="libs/kePrint/kePrint.js"></script>
     <link href="libs/lightable/lightable.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/plotly-binding/plotly.js"></script>
+    <script src="libs/typedarray/typedarray.min.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+    <script src="libs/crosstalk/js/crosstalk.min.js"></script>
+    <link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+    <script src="libs/plotly-main/plotly-latest.min.js"></script>
   </head>
   <body>
     <textarea id="source">
@@ -55,7 +63,7 @@ The design of any clinical trial starts with formulation of study objectives, e.
 
 - To estimate dose-response relationship
 
-- Etc. ...
+- etc.
 
 --
 
@@ -150,11 +158,319 @@ Therefore, for a 2-arm comparative trial with normal outcomes (with known varian
 [**Note**] Same result is obtained, if we consider a 2-sample `\(t\)`-test instead of `\(Z\)`-test.
 ]
 
+---
+
+# Which allocation maximizes power? -- Demo 
+
+<div id="htmlwidget-bdd9cc62baf31e450938" style="width:576px;height:432px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-bdd9cc62baf31e450938">{"x":{"visdat":{"15f1e5bc1f4ed":["function () ","plotlyVisDat"]},"cur_data":"15f1e5bc1f4ed","attrs":{"15f1e5bc1f4ed":{"x":{},"y":{},"mode":"markers","marker":{"size":20,"color":"green"},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Basic Slider","sliders":[{"active":1,"currentvalue":{"prefix":"Color: "},"pad":{"t":60},"steps":[{"args":["marker.color","red"],"label":"Red","method":"restyle","value":"1"},{"args":["marker.color","green"],"label":"Green","method":"restyle","value":"2"},{"args":["marker.color","blue"],"label":"Blue","method":"restyle","value":"3"}]}],"xaxis":{"domain":[0,1],"automargin":true,"title":"x","type":"category","categoryorder":"array","categoryarray":["1","2","3","4","5"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"y","type":"category","categoryorder":"array","categoryarray":["1"]},"hovermode":"closest","showlegend":false},"source":"A","config":{"showSendToCloud":false},"data":[{"x":["1","2","3","4","5"],"y":["1","1","1","1","1"],"mode":"markers","marker":{"color":"green","size":20,"line":{"color":"rgba(31,119,180,1)"}},"type":"scatter","error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+
+---
+
+# Example: Binary outcome trial
+
+`\(Y_{ik}\sim Bernoulli(p_k)\)`; `\(k = E, C\)`; `\(i = 1, 2, \ldots, n_k\)`:
+
+- `\(p_k\)` = probability of a successful outcome in group `\(k\)`.
+- Denote `\(q_k = 1-p_k\)` = probability of a "failure" in group `\(k\)`.
+    
+We want to test `\(H_0: p_E = p_C\)` vs. `\(p_E &gt; p_C\)` by using (asymptotic) `\(Z\)`-test:
+
+- Reject `\(H_0\)` at level `\(\alpha\)`, if `\(Z=\frac{\widehat{p}_E-\widehat{p}_C}{\sqrt{\frac{\widehat{p}_E\widehat{q}_E}{n_E}+\frac{\widehat{p}_C\widehat{q}_C}{n_C}}} &gt; z_{1-\alpha}\)` (where `\(\widehat{p}_k, \widehat{q}_k\)` are sample proportions).
+- Asymptotically `\(\widehat{p}_k \rightarrow p_k\)`, `\(\widehat{p}_k\widehat{q}_k \rightarrow p_kq_k\)`, all our derivations (developed in the normal outcome case) still apply here.
+    
+Note that `\(\text{E}\left[Y_{ik}\right]=p_k\)` and `\(\text{Var}\left[Y_{ik}\right]=p_kq_k\)` (variances are possibly different in two groups).
+
+`$$\boxed{\textit{Neyman allocation: } \rho_N^* = \frac{\sqrt{p_Eq_E}}{\sqrt{p_Eq_E}+\sqrt{p_Cq_C}}}$$`
+---
+
+# Example: Binary outcome trial -- Demo 
+
+---
+class: middle
+
+**Q**: What is a major limitation of Neyman allocation `\(\rho^* = \frac{\sqrt{p_Eq_E}}{\sqrt{p_Eq_E}+\sqrt{p_Cq_C}}\)`?
+
+**A**: The model parameters _**are unknown**_ to us! We are conducting the trial to gain information about `\(p_E\)` and `\(p_C\)`. Thus Neyman allocation cannot be implemented directly!
+
 
 ---
 class: inverse, center, middle
 
-# Thanks you!
+# 2. Maximizing estimation precision of treatment effects and contrasts
+
+---
+
+# Maximizing estimation precision
+
+- `\(K \geq 2\)` treatment groups (e.g. different doses of a drug or different intervention strategies).
+
+- Primary outcome: `\(Y_{ik}\)` follows some distribution from an exponential family (e.g. Normal, Bernoulli, Poisson, exponential, etc.)
+
+- `\(\mathbf{E}\left[Y_{ik}\right] = \mu_k\)`, `\(\mathbf{Var}\left[Y_{ik}\right] = \sigma^2_k\)`, `\(k = 1, 2, \ldots, K\)`.
+
+- Study objectives:
+  + The vector of mean treatment effects `\(\boldsymbol{\mu} = (\mu_1, \mu_2, \ldots, \mu_K)\)`.
+  + The vector of treatment contrasts `\(\boldsymbol{\mu}_C = (\mu_2-\mu_1, \ldots, \mu_K-\mu_1)\)`.
+  + etc.
+
+---
+
+# Design Optimization (1 of 2)
+
+Allocation design: `\(\boldsymbol{\rho}=(\rho_1, \rho_2, \ldots, \rho_K)\)`, `\(0 \leq \rho_k \leq 1\)` and `\(\sum_{k=1}^K{\rho_k} = 1\)`:
+
+- `\(\rho_k\)` = target allocation proportion for the `\(k\)`-th treatment group
+- `\(n\rho_k\)` = sample size of the `\(k\)`-th group (integer-rounded, if necessary)
+ 
+Design Fisher Information Matrix: `$$\boldsymbol{M}(\boldsymbol{\rho}) = n\times diag\left\{\frac{\rho_1}{\sigma^2_1}, \frac{\rho_2}{\sigma^2_2}, \ldots, \frac{\rho_K}{\sigma^2_K}\right\}$$`
+
+---
+
+# Design Optimization (1 of 2)
+
+Variance-covariance matrix of a consistent estimator (MLE) `\(\widehat{\boldsymbol{\mu}}=\left(\widehat{\mu}_1, \widehat{\mu}_2, \ldots, \widehat{\mu}_K\right)\)` of `\(\boldsymbol{\mu}=\left(\mu_1, \mu_2, \ldots, \mu_K\right)\)`:
+
+`$$\mathbf{Var}\left[\widehat{\boldsymbol{\mu}}\right]=\boldsymbol{M}^{-1}(\boldsymbol{\rho}) = \frac{1}{n}diag\left\{\frac{\sigma^2_1}{\rho_1}, \frac{\sigma^2_2}{\rho_2}, \ldots, \frac{\sigma^2_K}{\rho_K} \right\}$$`
+
+Variance-covariance matrix of a consistent estimator of the contrast vector `\(\boldsymbol{\mu}_C = \boldsymbol{A}^T\boldsymbol{\mu}=(\mu_2-\mu_1, \ldots, \mu_K-\mu_1)\)`: 
+
+`$$\mathbf{Var}\left[\boldsymbol{A}^T\widehat{\boldsymbol{\mu}}\right]=\boldsymbol{A}^T\boldsymbol{M}^{-1}(\boldsymbol{\rho})\boldsymbol{A} = \frac{1}{n}\left(diag\left\{\frac{\sigma^2_2}{\rho_2}, \ldots, \frac{\sigma^2_K}{\rho_K} \right\}+\frac{\sigma^2_1}{\rho_1}\mathbf{1}\mathbf{1}^T\right),$$`
+where `\(\boldsymbol{A}\)` is a contrast matrix.
+
+---
+
+## Design Optimization (2 of 2)
+
+We are interested in minimizing "variability" of an estimated parameter of interest.
+
+An optimal design problem is to find an allocation `\(\boldsymbol{\rho}=\left(\rho_1, \rho_2,  \ldots, \rho_K\right)\)` that minimizes some criterion of `\(\boldsymbol{M}^{-1}(\boldsymbol{\rho})\)` (or `\(\boldsymbol{A}^T\boldsymbol{M}^{-1}(\boldsymbol{\rho})\boldsymbol{A}\)`) subject to constraints `\(0 \leq \rho_k \leq 1\)` and `\(\sum_{k=1}^K{\rho_k}=1\)`:
+
++ _**D-optimal**_: `\(\min\limits_{\boldsymbol{\rho}}\left\{\text{det}\boldsymbol{M}^{-1}(\boldsymbol{\rho})\right\}\)` (volume of the confidence ellipsoid for `\(\boldsymbol{\mu}\)`).
++ _**A-optimal**_: `\(\min\limits_{\boldsymbol{\rho}}\left\{\text{trace}\boldsymbol{M}^{-1}(\boldsymbol{\rho})\right\}\)` (sum of the lengths of the major axes in the confidence ellipsoid for `\(\boldsymbol{\mu}\)`).
++ _**D&lt;sub&gt;A&lt;/sub&gt;-optimal**_: `\(\min\limits_{\boldsymbol{\rho}}\left\{\text{det}\boldsymbol{A}^T\boldsymbol{M}^{-1}(\boldsymbol{\rho})\boldsymbol{A}\right\}\)` (volume of the confidence ellipsoid for contrast vector `\(\boldsymbol{\mu}_C\)`).
++ _**A&lt;sub&gt;A&lt;/sub&gt;-optimal**_: `\(\min\limits_{\boldsymbol{\rho}}\left\{\text{trace}\boldsymbol{A}^T\boldsymbol{M}^{-1}(\boldsymbol{\rho})\boldsymbol{A}\right\}\)` (sum of the lengths of the major axes in the confidence ellipsoid for contrast vector `\(\boldsymbol{\mu}_C\)`).
+
+Some of these problems can be solved _**analytically**_ (e.g., by using Lagrange multiplier minimization).
+
+---
+
+# D-Optimal Allocation
+
+`$$\min\limits_{\boldsymbol{\rho}}\left\{\text{det}\boldsymbol{M}^{-1}(\boldsymbol{\rho})\right\}=\min\limits_{\boldsymbol{\rho}}\left\{\frac{\sigma^2_1}{\rho_1}\cdot\frac{\sigma^2_2}{\rho_2}\cdot\ldots\cdot\frac{\sigma^2_K}{\rho_K}\right\}$$`
+
+Equivalently: `\(\rho_1\cdot\rho_2\cdot\ldots\cdot\rho_K\rightarrow\max\limits_{\boldsymbol{\rho}}\)`.
+
+By the geometric-arithmetic mean inequality: 
+`$$\left(\rho_1\cdot\rho_2\cdot\ldots\cdot\rho_K\right)^\frac{1}{K}\leq\frac{1}{K}\sum_{k=1}^K{\rho_k}=\frac{1}{K}\Rightarrow \rho_1\cdot\rho_2\cdot\ldots\cdot\rho_K \leq \left(\frac{1}{K}\right)^K.$$`
+
+&lt;span style="background-color: #2F4F4F; color:white"&gt;
+Thus, an equal allocation design `\(\boldsymbol{\rho}=\left(\frac{1}{K}, \ldots, \frac{1}{K}\right)\)` is D-optimal.
+&lt;/span&gt;
+
+---
+
+# A-Optimal Allocation
+
+`$$\min\limits_{\boldsymbol{\rho}}\left\{\text{trace}\boldsymbol{M}^{-1}(\boldsymbol{\rho})\right\}=\min\limits_{\boldsymbol{\rho}}\left\{\frac{\sigma^2_1}{\rho_1}+\frac{\sigma^2_2}{\rho_2}+\ldots+\frac{\sigma^2_K}{\rho_K}\right\}$$`
+
+Lagrange multiplier minimization: 
+`$$\frac{\partial}{\partial{\rho_k}}\left\{\sum_{k=1}^K{\frac{\sigma^2_k}{\rho_k}+\lambda\left(\sum_{k=1}^K{\rho_k}-1\right)}\right\}=-\frac{\sigma^2_k}{\rho_k^2}+\lambda,\quad k = 1, 2, \ldots, K.$$`
+
+Setting the derivatives to zero, and using `\(\sum_{k=1}^K{\rho_k} = 1\)`, we find the A-optimal allocation as `$$\rho^{(A)}_k=\frac{\sigma_k}{\sum_{i=1}^K{\sigma_i}}, \quad k = 1, 2, \ldots, K.$$`
+
+- If `\(K = 2\)`, an optimal allocation is the _**Neyman allocation**_!
+
+- If `\(\sigma^2_k\)`'s are all equal, an optimal allocation is the _**equal allocation**_!
+
+---
+
+# D&lt;sub&gt;A&lt;/sub&gt;-Optimal Allocation
+
+`$$\min\limits_{\boldsymbol{\rho}}\left\{\text{det}\boldsymbol{A}^T\boldsymbol{M}^{-1}(\boldsymbol{\rho})\boldsymbol{A}\right\} =\min\limits_{\boldsymbol{\rho}}\text{det}\left\{diag\left\{\frac{\sigma^2_2}{\rho_2}, \ldots, \frac{\sigma^2_K}{\rho_K} \right\}+\frac{\sigma^2_1}{\rho_1}\mathbf{1}\mathbf{1}^T\right\}.$$`
+
+- Optimal solution is not in closed form
+
+- Wong and Zhu (2008)&lt;sup&gt;1&lt;/sup&gt; showed that D&lt;sub&gt;A&lt;/sub&gt;-optimal proportions satisfy the following (nonlinear) system of equations:
+
+`$$\frac{1}{\rho^*_k}-\frac{1/\sigma^2_k}{\sum_{i=1}^K{\rho^*_i/\sigma^2_i}}=0, \quad k =1, 2, \ldots, K.$$`
+
+- If `\(\sigma^2_k\)`'s are all equal, the D&lt;sub&gt;A&lt;/sub&gt;-optimal solution is the equal allocation!
+
+.footnote[
+[1] Wong, W. K., and Zhu, W.  _"Optimum treatment allocation rules under a
+variance heterogeneity model"_. Stat. Med., 27, 4581–4595 (2008).
+]
+
+---
+
+# D&lt;sub&gt;A&lt;/sub&gt;-Optimal Allocation -- Some Properties
+
+1. When `\(K = 2\)`, the D&lt;sub&gt;A&lt;/sub&gt;-optimal allocation is Neyman allocation: 
+`$$\rho^*_k = \frac{\sigma_k}{\sigma_1+\sigma_2}, \quad k = 1, 2..$$`
+
+2. The D&lt;sub&gt;A&lt;/sub&gt;-optimal proportions satisfy: 
+`$$0 \leq \rho^*_k \leq \frac{1}{K-1}, \quad k = 1, 2, \ldots, K.$$`
+
+3. If `\(\sigma^2_k\rightarrow 0\)` and `\(\sigma^2_k/\sigma^2_j\rightarrow 0\)` for all `\(j \ne k\)` (variance in the `\(k\)`-th group is small relative to all other group variances), then `\(\rho^*_k\rightarrow 0\)`.
+
+4. Let the `\(K\)` treatment groups be such that `\(\sigma_1\geq\sigma_2\geq \ldots\sigma_K\)`. Then the D&lt;sub&gt;A&lt;/sub&gt;-optimal proportions satisfy: `\(\rho^*_1\geq\rho^*_2\geq \ldots\rho^*_K\)` (more variable treatment groups receive greater proportions of study subjects).
+
+---
+
+# D&lt;sub&gt;A&lt;/sub&gt;-Optimal Allocation -- Example
+
+- Binary outcome trial, `\(K=3\)` treatment groups.
+- `\(p_k\)` probability of a successful outcome in group `\(k = 1, 2, 3\)`.
+
+&lt;table class="table table-striped" style="font-size: 18px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;Treatment success probabilities&lt;/div&gt;&lt;/th&gt;
+&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt; `\(D_A\)`-optimal allocation proportions&lt;/div&gt;&lt;/th&gt;
+&lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt;  `\(p_1\)`  &lt;/th&gt;
+   &lt;th style="text-align:right;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; `\(p_2\)` &lt;/th&gt;
+   &lt;th style="text-align:right;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt;  `\(p_3\)` &lt;/th&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; `\(\rho^*_1\)` &lt;/th&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; `\(\rho^*_2\)` &lt;/th&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; `\(\rho^*_3\)` &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #708090 !important;color: black !important;"&gt; 0.1 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #708090 !important;color: black !important;"&gt; 0.02 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #708090 !important;color: black !important;"&gt; 0.02 &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #708090 !important;"&gt; &lt;span style="     color: black !important;"&gt;0.43&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #708090 !important;"&gt; &lt;span style="     color: black !important;"&gt;0.285&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #708090 !important;"&gt; &lt;span style="     color: black !important;"&gt;0.285&lt;/span&gt; &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #2F4F4F !important;color: black !important;"&gt; 0.1 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #2F4F4F !important;color: black !important;"&gt; 0.30 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #2F4F4F !important;color: black !important;"&gt; 0.50 &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: black !important;"&gt;0.263&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: black !important;"&gt;0.36&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: black !important;"&gt;0.377&lt;/span&gt; &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #708090 !important;color: black !important;"&gt; 0.3 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #708090 !important;color: black !important;"&gt; 0.40 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #708090 !important;color: black !important;"&gt; 0.60 &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #708090 !important;"&gt; &lt;span style="     color: black !important;"&gt;0.323&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #708090 !important;"&gt; &lt;span style="     color: black !important;"&gt;0.338&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #708090 !important;"&gt; &lt;span style="     color: black !important;"&gt;0.338&lt;/span&gt; &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #2F4F4F !important;color: black !important;"&gt; 0.4 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #2F4F4F !important;color: black !important;"&gt; 0.60 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #2F4F4F !important;color: black !important;"&gt; 0.80 &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: red !important;"&gt;0.349&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: red !important;"&gt;0.349&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: red !important;"&gt;0.303&lt;/span&gt; &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #708090 !important;color: black !important;"&gt; 0.7 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #708090 !important;color: black !important;"&gt; 0.30 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #708090 !important;color: black !important;"&gt; 0.80 &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #708090 !important;"&gt; &lt;span style="     color: red !important;"&gt;0.344&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #708090 !important;"&gt; &lt;span style="     color: red !important;"&gt;0.344&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #708090 !important;"&gt; &lt;span style="     color: red !important;"&gt;0.313&lt;/span&gt; &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #2F4F4F !important;color: black !important;"&gt; 0.9 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #2F4F4F !important;color: black !important;"&gt; 0.95 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: white !important;background-color: #2F4F4F !important;color: black !important;"&gt; 0.99 &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: red !important;"&gt;0.427&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: red !important;"&gt;0.378&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: red !important;"&gt;0.196&lt;/span&gt; &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;span style="background-color: #2F4F4F; color:white"&gt;
+Q: Based on these results, what is one caveat of the D&lt;sub&gt;A&lt;/sub&gt;-optimal allocation?
+&lt;/span&gt;
+
+&lt;span style="background-color: #2F4F4F; color:white"&gt;
+A: It can assign greater proportions to less successful treatments (cf. last three examples).
+&lt;/span&gt;
+
+---
+
+# A&lt;sub&gt;A&lt;/sub&gt;-Optimal Allocation    
+
+`$$\min\limits_{\boldsymbol{\rho}}\left\{\text{trace}\boldsymbol{A}^T\boldsymbol{M}^{-1}(\boldsymbol{\rho})\boldsymbol{A}\right\}=\min\limits_{\boldsymbol{\rho}}\left\{\frac{\sigma^2_2}{\rho_2}+\frac{\sigma^2_3}{\rho_3}+\ldots+\frac{\sigma^2_K}{\rho_K}+(K-1)\frac{\sigma^2_1}{\rho_1}\right\}$$`
+
+Lagrange multiplier minimization: 
+
+`$$\frac{\partial}{\partial{\rho_k}}\left\{\sum_{k=2}^K{\frac{\sigma^2_k}{\rho_k}+(K-1)\frac{\sigma^2_1}{\rho_1}+\lambda\left(\sum_{k=1}^K{\rho_k}-1\right)}\right\}=
+\left\{\begin{array}{cl}-(K-1)\frac{\sigma^2_1}{\rho_1^2}+\lambda, &amp; k = 1 \\
+-\frac{\sigma^2_k}{\rho_k^2}+\lambda, &amp; k = \overline{2, K}\end{array}\right.$$`
+
+
+Setting the derivatives to zero, and using `\(\sum_{k=1}^K{\rho_k} = 1\)`, we find the A&lt;sub&gt;A&lt;/sub&gt;-optimal allocation as 
+
+`$$\rho^{(A)}_k=\left\{\begin{array}{cl}
+\frac{\sigma_1\sqrt{K-1}}{\sigma_1\sqrt{K-1}+\sum_{i=2}^K{\sigma_i}}, &amp; k = 1\\
+\frac{\sigma_k}{\sigma_1\sqrt{K-1}+\sum_{i=2}^K{\sigma_i}}, &amp; k = \overline{2, K}\end{array}
+\right.$$`
+
+
+- If `\(K = 2\)`, an optimal allocation is the _**Neyman allocation**_!
+
+---
+
+# Summary of Optimal Allocation Ratios$^*$
+
+&lt;table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #6666ff !important;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #6666ff !important;"&gt; Equal variances ($K\geq 2$) &lt;/th&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #6666ff !important;"&gt; Unequal variances ($K = 2$) &lt;/th&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #6666ff !important;"&gt; Unequal variances ($K$ &amp;gt; `\(2\)`) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;background-color: #99cfe0 !important;color: black !important;"&gt; D-optimal &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #99cfe0 !important;color: black !important;"&gt; `\(1:1:\ldots:1\)` &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #99cfe0 !important;"&gt; `\(1:1\)` &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #99cfe0 !important;"&gt; `\(1:1:\ldots:1\)` &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;background-color: #c1e1ec !important;color: black !important;"&gt; A-optimal &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #c1e1ec !important;color: black !important;"&gt; `\(1:1:\ldots:1\)` &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #c1e1ec !important;"&gt; `\(\sigma_1:\sigma_2\)` &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #c1e1ec !important;"&gt; `\(\sigma_1:\sigma_2:\ldots:\sigma_K\)` &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;background-color: #99cfe0 !important;color: black !important;"&gt; D&lt;sub&gt;A&lt;/sub&gt;-optimal &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #99cfe0 !important;color: black !important;"&gt; `\(1:1:\ldots:1\)` &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #99cfe0 !important;"&gt; `\(\sigma_1:\sigma_2\)` &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #99cfe0 !important;"&gt; No closed form  solution;must be found numerically &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;background-color: #c1e1ec !important;color: black !important;"&gt; A&lt;sub&gt;A&lt;/sub&gt;-optimal &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #c1e1ec !important;color: black !important;"&gt; `\(\sqrt{K-1}:1:\ldots:1\)` &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #c1e1ec !important;"&gt; `\(\sigma_1:\sigma_2\)` &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #c1e1ec !important;"&gt; `\(\sigma_1\sqrt{K-1}:\sigma_2:\ldots:\sigma_K\)` &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+.footnote[
+An allocation ratio `\(C_1:C_2:\ldots:C_K\)` corresponds to the vector pf allocation proportions `\(\boldsymbol{\rho}=\left(\frac{C_1}{\sum_{k=1}^K{C_k}}, \frac{C_2}{\sum_{k=1}^K{C_k}}, \ldots, \frac{C_K}{\sum_{k=1}^K{C_k}}\right)\)`
+] 
+
+
+---
+class: inverse, center, middle
+
+# Thank you!
 
 [**Back to the course page**](index.html)
 
