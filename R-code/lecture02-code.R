@@ -5,7 +5,7 @@ library(nleqslv)
 doptimal <- function(sigma_vec) {
   # K -- number of treatment groups
   K <- length(sigma_vec)
-  
+
   rep(1, K)/K
 }
 
@@ -40,8 +40,8 @@ aaoptimal <- function(sigma_vec) {
 defficiency <- function(rho1, rho2, sigma_vec) {
   # K -- number of treatment groups
   K <- length(sigma_vec)
-  
-  obj_fcn <- map_dbl(list(rho1, rho2), ~ prod(sigma_vec^2/.))
+
+  obj_fcn <- purrr::map_dbl(list(rho1, rho2), ~ prod(sigma_vec^2/.))
 
   (obj_fcn[1]/obj_fcn[2])^(1/K)
 }
@@ -51,8 +51,8 @@ defficiency <- function(rho1, rho2, sigma_vec) {
 aefficiency <- function(rho1, rho2, sigma_vec) {
   # K -- number of treatment groups
   K <- length(sigma_vec)
-  
-  obj_fcn <- map_dbl(list(rho1, rho2), ~ sum(sigma_vec^2/.))
+
+  obj_fcn <- purrr::map_dbl(list(rho1, rho2), ~ sum(sigma_vec^2/.))
 
   (obj_fcn[1]/obj_fcn[2])
 }
@@ -63,8 +63,8 @@ daefficiency <- function(rho1, rho2, sigma_vec) {
   # K -- number of treatment groups
   K <- length(sigma_vec)
   one <- cbind(rep(1, K-1))
-  
-  obj_fcn <- map_dbl(list(rho1, rho2), ~ det(diag(sigma_vec[-1]^2/.[-1]) + 
+
+  obj_fcn <- purrr::map_dbl(list(rho1, rho2), ~ det(diag(sigma_vec[-1]^2/.[-1]) +
                                                sigma_vec[1]^2/.[1]*one%*%t(one)))
 
   (obj_fcn[1]/obj_fcn[2])^(1/K)
@@ -76,9 +76,9 @@ aaefficiency <- function(rho1, rho2, sigma_vec) {
   # K -- number of treatment groups
   K <- length(sigma_vec)
   one <- cbind(rep(1, K-1))
-  
-  obj_fcn <- map_dbl(list(rho1, rho2), ~ sum(sigma_vec[-1]^2/.[-1]) + (K-1)*sigma_vec[1]^2/.[1])
-  
+
+  obj_fcn <- purrr::map_dbl(list(rho1, rho2), ~ sum(sigma_vec[-1]^2/.[-1]) + (K-1)*sigma_vec[1]^2/.[1])
+
   (obj_fcn[1]/obj_fcn[2])
 }
 
@@ -87,9 +87,9 @@ aaefficiency <- function(rho1, rho2, sigma_vec) {
 ftoptimal <- function(prob_vec) {
   # number of treatments
   K <- length(prob_vec)
-  
+
   p <- prob_vec*c((K-1), rep(1, K-1))
-  
+
   sqrt(p)/sum(sqrt(p))
 }
 
@@ -101,17 +101,17 @@ ftoptimal <- function(prob_vec) {
 simulate_logistic <- function(nsbj, d, alpha, beta) {
   # doses assigns to subjetcs
   dose <- sample(d, nsbj, TRUE)
-  
+
   # number of subjects per dose
-  n <- map_dbl(d, ~ sum(as.numeric(. == dose)))
-  
+  n <- purrr::map_dbl(d, ~ sum(as.numeric(. == dose)))
+
   # responses
-  Y <- rbinom(length(dose), 1, prob = 1/(1+exp(-alpha-beta*dose))) 
-  
+  Y <- rbinom(length(dose), 1, prob = 1/(1+exp(-alpha-beta*dose)))
+
   # number of events per dose
-  x <- map_dbl(d, ~ sum(Y[. == dose]))
-  
-  data_frame(d = d, n = n, x = x)
+  x <- purrr::map_dbl(d, ~ sum(Y[. == dose]))
+
+  tibble::tibble(d = d, n = n, x = x)
 }
 
 # fit 2-parameter logistic regression
@@ -119,33 +119,19 @@ fit_logistic <- function(d, n, x) {
   # define score equations
   score_equations <- function(theta, d, n, x) {
     equation <- numeric(2)
-    
+
     alpha <- theta[1]
     beta <- theta[2]
-    
+
     prob <- 1/(1+exp(-alpha-beta*d))
-    
+
     equation[1] <- sum(x - n*prob)
     equation[2] <- sum((x - n*prob)*d)
-    
+
     return(equation)
   }
-  
+
   theta_mle <- nleqslv(c(0, 0), function(theta) {score_equations(theta, d, n, x)}, control=list(btol=.001))$x
   list(alpha = theta_mle[1], beta = theta_mle[2])
 }
 
-# simulation
-# nsim <- 1000
-# map(seq_len(nsim), ~ {
-#   obs <- simulate_logistic(100, d, alpha, beta)
-#   coeffs <- fit_logistic(obs$d, obs$n, obs$x)
-#   
-#   data_frame(alpha = coeffs$alpha, beta = coeffs$beta)
-# }) %>% 
-#   bind_rows() %>% 
-#   gather(coefficient, value) %>% 
-#   group_by(coefficient) %>% 
-#   summarise(mean = mean(value), sd = sd(value))
-  
-  

@@ -1,0 +1,354 @@
+lubridate::ymd("20180402")
+r2d3::r2d3("js/d3-test.js", data=c(0.3, 0.6, 0.8, 0.95, 0.40, 0.20))
+r2d3::r2d3(d3_version = 4, script = "js/d3-test.js")
+r2d3::r2d3("js/d3-test.js", data=c(0.3, 0.6, 0.8, 0.95, 0.40, 0.20))
+r2d3::r2d3("js/d3-test.js", data=c(0.3, 0.6, 0.8, 0.95, 0.40, 0.20))
+r2d3::r2d3(d3_version = 4, script = "js/d3-test.js")
+gg <- ggplot(gapminder, aes(gdpPercap, lifeExp, color = continent)) +
+geom_point(aes(size = pop, frame = year, ids = country)) +
+scale_x_log10()
+ggplotly(gg)
+library(ggplot2)
+gg <- ggplot(gapminder, aes(gdpPercap, lifeExp, color = continent)) +
+geom_point(aes(size = pop, frame = year, ids = country)) +
+scale_x_log10()
+ggplotly(gg)
+data(gapminder, package = "gapminder")
+mtcars
+gg <- ggplot(mtcars, aes(mpg, cy, color = am)) +
+geom_point(aes(vs)) +
+ggplotly(gg)
+gg <- ggplot(mtcars, aes(mpg, cy, color = am)) +
+geom_point(aes(vs)) +
+plotly::ggplotly(gg)
+gg <- ggplot(mtcars, aes(mpg, cy, color = am)) +
+geom_point(aes(vs)) +
+plotly::ggplotly(gg)
+gg <- ggplot(mtcars, aes(mpg, cy, color = am)) +
+geom_point(aes(vs))
+plotly::ggplotly(gg)
+gg <- ggplot(mtcars, aes(mpg, cv, color = am)) +
+geom_point(aes(vs))
+plotly::ggplotly(gg)
+mtcars
+gg <- ggplot(mtcars, aes(mpg, cyl, color = am)) +
+geom_point(aes(vs))
+plotly::ggplotly(gg)
+library(plotly)
+install.packages("gapminder")
+data(gapminder, package = "gapminder")
+library(plotly)
+data(gapminder, package = "gapminder")
+base <- gapminder %>%
+plot_ly(x = ~gdpPercap, y = ~lifeExp, size = ~pop,
+text = ~country, hoverinfo = "text") %>%
+layout(xaxis = list(type = "log"))
+base %>%
+add_markers(color = ~continent, frame = ~year, ids = ~country) %>%
+animation_opts(1000, easing = "elastic", redraw = FALSE) %>%
+animation_button(
+x = 1, xanchor = "right", y = 0, yanchor = "bottom"
+) %>%
+animation_slider(
+currentvalue = list(prefix = "YEAR ", font = list(color="red"))
+)
+crossing(ss, delta, stdE, stdE, aplha)
+ss <- seq(10, 30, by = 2)
+delta <- seq(0, 2, by = 0.1)
+stdE <- seq(1, 2.5, by = 0.1)
+stdC <- seq(1, 2.5, by = 0.1)
+alpha <- seq(0.01, 0.2, by = 0.01)
+tidyr::crossing(ss, delta, stdE, stdE, aplha)
+tidyr::crossing(ss, delta, stdE, stdE, alpha)
+tidyr::crossing(ss, delta, stdE, stdC, alpha)
+tidyr::crossing(ss, delta, stdE, stdC, alpha) %>%
+tidyr::nest()
+diff <- seq(0, 2, by = 0.1)
+ss <- seq(10, 30, by = 2)
+diff <- seq(0, 2, by = 0.1)
+stdE <- seq(1, 2.5, by = 0.1)
+stdC <- seq(1, 2.5, by = 0.1)
+alpha <- seq(0.01, 0.2, by = 0.01)
+tidyr::crossing(ss, delta, stdE, stdC, alpha) %>%
+dplyr::mutate(
+power = tibble::tibble(
+rho = seq(0.1, 0.9, by = 0.1),
+nE = round(ss*rho),
+nC = round(ss*(1-rho)),
+Delta = diff/(sqrt(stdE^2/nE+stdC^2/nC))
+pow = 1-pnorm(z-Delta)
+)
+)
+tidyr::crossing(ss, delta, stdE, stdC, alpha) %>%
+dplyr::mutate(
+power = tibble::tibble(
+rho = seq(0.1, 0.9, by = 0.1),
+nE = round(ss*rho),
+nC = round(ss*(1-rho)),
+Delta = diff/(sqrt(stdE^2/nE+stdC^2/nC)),
+pow = 1-pnorm(z-Delta)
+)
+)
+tidyr::crossing(ss, delta, stdE, stdC, alpha) %>%
+dplyr::group_nest(ss, diff, stdE, stdC, alpha) %>%
+dplyr::mutate(
+power = tibble::tibble(
+rho = seq(0.1, 0.9, by = 0.1),
+nE = round(ss*rho),
+nC = round(ss*(1-rho)),
+Delta = diff/(sqrt(stdE^2/nE+stdC^2/nC)),
+pow = 1-pnorm(z-Delta)
+)
+)
+tidyr::crossing(ss, diff, stdE, stdC, alpha) %>%
+dplyr::group_nest(ss, diff, stdE, stdC, alpha) %>%
+dplyr::mutate(
+power = tibble::tibble(
+rho = seq(0.1, 0.9, by = 0.1),
+nE = round(ss*rho),
+nC = round(ss*(1-rho)),
+Delta = diff/(sqrt(stdE^2/nE+stdC^2/nC)),
+pow = 1-pnorm(z-Delta)
+)
+)
+tidyr::crossing(ss, diff, stdE, stdC, alpha) %>%
+dplyr::group_nest(ss, diff, stdE, stdC, alpha)
+rho <- seq(0.1, 0.9, by = 0.1)
+tidyr::crossing(ss, diff, stdE, stdC, alpha, rho)
+tidyr::crossing(ss, diff, stdE, stdC, alpha, rho) %>%
+dplyr::mutate(
+nE = round(ss*rho),
+nC = round(ss*(1-rho)),
+z <- qnorm(1-alpha),
+Delta = diff/(sqrt(stdE^2/nE+stdC^2/nC)),
+power = 1-pnorm(z-Delta)
+)
+tidyr::crossing(ss, diff, stdE, stdC, alpha, rho) %>%
+dplyr::mutate(
+nE = round(ss*rho),
+nC = round(ss*(1-rho)),
+z = qnorm(1-alpha),
+Delta = diff/(sqrt(stdE^2/nE+stdC^2/nC)),
+power = 1-pnorm(z-Delta)
+)
+power <- tidyr::crossing(ss, diff, stdE, stdC, alpha, rho) %>%
+dplyr::mutate(
+nE = round(ss*rho),
+nC = round(ss*(1-rho)),
+z = qnorm(1-alpha),
+Delta = diff/(sqrt(stdE^2/nE+stdC^2/nC)),
+value = 1-pnorm(z-Delta)
+)
+dplyr::filter(power, diff == 2 & stdE == 1 & stdC == 1 & alpha == 0.05)
+dplyr::filter(power, diff == 2 & stdE == 1 & stdC == 1 & alpha == 0.05) %>%
+plot_ly(x = rho, y = ~value,
+text = ~ss, hoverinfo = "text")
+dplyr::filter(power, diff == 2 & stdE == 1 & stdC == 1 & alpha == 0.05) %>%
+plot_ly(x = rho, y = ~value)
+dplyr::filter(power, diff == 2 & stdE == 1 & stdC == 1 & alpha == 0.05)
+plt <- dplyr::filter(power, diff == 2 & stdE == 1 & stdC == 1 & alpha == 0.05) %>%
+plot_ly(x = rho, y = ~value, color = ~ss)
+plt
+plt <- dplyr::filter(power, diff == 2 & stdE == 1 & stdC == 1 & alpha == 0.05) %>%
+plot_ly(x = rho, y = ~value, color = ~ss)
+add_lines(plt)
+plt <- dplyr::filter(power, diff == 2 & stdE == 1 & stdC == 1 & alpha == 0.05) %>%
+plot_ly(x = rho, y = ~value, color = ~ss)
+add_lines(plt, linetype = ~ss)
+dplyr::filter(power, diff == 2 & stdE == 1 & stdC == 1 & alpha == 0.05) %>%
+ggplot(aes(rho, value, group = ss))+
+geom_line()
+plt <- dplyr::filter(power, diff == 2 & stdE == 1 & stdC == 1 & alpha == 0.05) %>%
+plot_ly(x = rho, y = ~value) %>%
+add_lines(linetype = ~ss)
+plt
+library(dplyr)
+top5 <- txhousing %>%
+group_by(city) %>%
+summarise(m = mean(sales, na.rm = TRUE)) %>%
+arrange(desc(m)) %>%
+top_n(5)
+top5
+tx5 <- semi_join(txhousing, top5, by = "city")
+tx5
+plot_ly(tx5, x = ~date, y = ~median) %>%
+add_lines(linetype = ~city)
+plt <- dplyr::filter(power, diff == 2 & stdE == 1 & stdC == 1 & alpha == 0.05) %>%
+plot_ly(x = ~rho, y = ~value) %>%
+add_lines(linetype = ~ss)
+plt
+dplyr::filter(power, diff == 2 & stdE == 1 & stdC == 1 & alpha == 0.05) %>%
+plot_ly(x = ~rho, y = ~value) %>%
+add_lines(frame = ~ss)%>%
+animation_slider(
+currentvalue = list(prefix = "SS ", font = list(color="red"))
+)
+dplyr::filter(power, stdE == 1 & stdC == 1 & alpha == 0.05) %>%
+plot_ly(x = ~rho, y = ~value) %>%
+add_lines(frame = ~ss)%>%
+add_lines(frame = ~diff)%>%
+animation_slider(
+currentvalue = list(prefix = "SS ", font = list(color="red"))
+)%>%
+animation_slider(
+currentvalue = list(prefix = "diff ", font = list(color="blue"))
+)
+plt <- dplyr::filter(power, ss == 30 & stdE == 1 & stdC == 1 & alpha == 0.05) %>%
+plot_ly(x = ~rho, y = ~value) %>%
+#add_lines(frame = ~ss)%>%
+add_lines(frame = ~diff)%>%
+# animation_slider(
+#   currentvalue = list(prefix = "SS ", font = list(color="red"))
+# )%>%
+animation_slider(
+currentvalue = list(prefix = "diff ", font = list(color="blue"))
+)
+plt
+ss <- seq(10, 30, by = 2)
+diff <- seq(0, 1.5, by = 0.1)
+stdE <- seq(1, 2.5, by = 0.1)
+stdC <- seq(1, 2.5, by = 0.1)
+alpha <- seq(0.01, 0.2, by = 0.01)
+rho <- seq(0.1, 0.9, by = 0.1)
+power <- tidyr::crossing(ss, diff, stdE, stdC, alpha, rho) %>%
+dplyr::mutate(
+nE = round(ss*rho),
+nC = round(ss*(1-rho)),
+z = qnorm(1-alpha),
+Delta = diff/(sqrt(stdE^2/nE+stdC^2/nC)),
+value = 1-pnorm(z-Delta)
+)
+plt <- dplyr::filter(power, ss == 30 & stdE == 1 & stdC == 1 & alpha == 0.05) %>%
+plot_ly(x = ~rho, y = ~value) %>%
+#add_lines(frame = ~ss)%>%
+add_lines(frame = ~diff)%>%
+# animation_slider(
+#   currentvalue = list(prefix = "SS ", font = list(color="red"))
+# )%>%
+animation_slider(
+currentvalue = list(prefix = "diff ", font = list(color="blue"))
+)
+plt
+ss <- seq(10, 30, by = 2)
+diff <- seq(0, 1.5, by = 0.1)
+stdE <- seq(1, 2.5, by = 0.1)
+stdC <- seq(1, 2.5, by = 0.1)
+alpha <- seq(0.01, 0.2, by = 0.01)
+rho <- seq(0.1, 0.9, by = 0.05)
+power <- tidyr::crossing(ss, diff, stdE, stdC, alpha, rho) %>%
+dplyr::mutate(
+nE = round(ss*rho),
+nC = round(ss*(1-rho)),
+z = qnorm(1-alpha),
+Delta = diff/(sqrt(stdE^2/nE+stdC^2/nC)),
+value = 1-pnorm(z-Delta)
+)
+plt <- dplyr::filter(power, ss == 30 & stdE == 1 & stdC == 1 & alpha == 0.05) %>%
+plot_ly(x = ~rho, y = ~value) %>%
+#add_lines(frame = ~ss)%>%
+add_lines(frame = ~diff)%>%
+# animation_slider(
+#   currentvalue = list(prefix = "SS ", font = list(color="red"))
+# )%>%
+animation_slider(
+currentvalue = list(prefix = "diff ", font = list(color="blue"))
+)
+plt
+library(ggplot2)
+library(ggplot2)
+library(latex2exp)
+library(magrittr)
+ols_sim <- readr::read_csv("./mols-julia/ols-mols-ridge-sim.csv")
+install.packages("rticles")
+shiny::runApp('test')
+runApp('test')
+runApp('test')
+broom::tidy(summary(datasets::mtcars))
+runApp('test')
+install.packages("nlmixr")
+library(nlmixr)
+ode <- "
+kel = CL/V;
+d/dt(X) = -kel*X;
+C=X/V;
+PRED = C
+"
+ode_system <- RxODE(model = ode)
+#>
+model_error_structure <- cp ~ C + add(0.01) + prop(0.01)
+inits <- c(CL = 1, V = 10)
+control <- dynmodelControl(method = "Nelder-Mead")
+fit <-
+try(dynmodel(
+system = ode_system,
+model = model_error_structure,
+data = Bolus_1CPT,
+inits = inits,
+control = control
+))
+library(RxODE)
+ode <- "
+kel = CL/V;
+d/dt(X) = -kel*X;
+C=X/V;
+PRED = C
+"
+ode_system <- RxODE(model = ode)
+?RxODE
+ode <- "
+# A 4-compartment model, 3 PK and a PD (effect) compartment
+# (notice state variable names 'depot', 'centr', 'peri', 'eff')
+C2 = centr/V2;
+C3 = peri/V3;
+d/dt(depot) =-KA*depot;
+d/dt(centr) = KA*depot - CL*C2 - Q*C2 + Q*C3;
+d/dt(peri)  =                    Q*C2 - Q*C3;
+d/dt(eff)  = Kin - Kout*(1-C2/(EC50+C2))*eff;
+"
+m1 <- RxODE(model = ode)
+print(m1)
+install.packages("touch")
+library(tourch)
+install.packages("torch")
+install.packages("torchdatasets")
+library(torch)
+torch_tensor(1)
+library(torchvision)
+library(torchdatasets)
+train_indices <- 1:10000
+val_indices <- 10001:15000
+test_indices <- 15001:20000
+add_channel_dim <- function(img) img$unsqueeze(1)
+crop_axes <- function(img) transform_crop(img, top = 0, left = 21, height = 131, width = 130)
+root <- file.path(tempdir(), "correlation")
+train_ds <- guess_the_correlation_dataset(
+# where to unpack
+root = root,
+# additional preprocessing
+transform = function(img) crop_axes(img) %>% add_channel_dim(),
+# don't take all data, but just the indices we pass in
+indexes = train_indices,
+download = TRUE
+)
+valid_ds <- guess_the_correlation_dataset(
+root = root,
+transform = function(img) crop_axes(img) %>% add_channel_dim(),
+indexes = val_indices,
+download = FALSE
+)
+test_ds <- guess_the_correlation_dataset(
+root = root,
+transform = function(img) crop_axes(img) %>% add_channel_dim(),
+indexes = test_indices,
+download = FALSE
+)
+length(train_ds)
+length(valid_ds)
+length(test_ds)
+train_ds[1]
+add_channel_dim <- function(img) img$unsqueeze(1)
+train_ds <- guess_the_correlation_dataset(
+# ...
+transform = function(img) crop_axes(img) %>% add_channel_dim(),
+# ...
+)
