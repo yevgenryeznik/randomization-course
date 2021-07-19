@@ -28,18 +28,17 @@ class: center, middle, inverse, title-slide
 
 
 
-
 class: inverse, left, middle
 
-## Agenda
+# Agenda
 
-1. Maximizing power of treatment comparison
+1. Maximizing power of treatment comparison.
 
-2. Maximizing estimation precision of treatment effects and contrasts
+2. Maximizing estimation precision of treatment effects and contrasts.
 
-3. Optimal allocation designs to balance statistical efficiency and ethical considerations
+3. Optimal allocation designs to balance statistical efficiency and ethical considerations.
 
-4. Optimal designs for dose-response studies
+4. Optimal designs for dose-response studies.
 
 ---
 
@@ -326,8 +325,8 @@ Setting the derivatives to zero, and using `\(\sum_{k=1}^K{\rho_k} = 1\)`, we fi
 - If `\(\sigma^2_k\)`'s are all equal, the D&lt;sub&gt;A&lt;/sub&gt;-optimal solution is the equal allocation!
 
 .footnote[
-[1] Wong, W. K., and Zhu, W.  _"Optimum treatment allocation rules under a
-variance heterogeneity model"_. Stat. Med., 27, 4581–4595 (2008).
+[1] Wong, W. K., and Zhu, W. (2008) _"Optimum treatment allocation rules under a
+variance heterogeneity model"_. Stat. Med., **27**, p. 4581–4595.
 ]
 
 ---
@@ -536,6 +535,223 @@ Setting the derivatives to zero, and using `\(\sum_{k=1}^K{\rho_k} = 1\)`, we fi
 &lt;img src="lecture02_files/figure-html/efficiency-of-equal-allocation-1.png" alt="Relative efficiencies heatmap plots"  /&gt;
 &lt;p class="caption"&gt;Relative efficiencies heatmap plots&lt;/p&gt;
 &lt;/div&gt;
+
+---
+
+class: inverse, center, middle
+
+# 3. Optimal Allocation to Balance Statistical Efficiency and Ethical Considerations
+
+---
+
+# Statistical and Ethical Objectives
+
+- Clinical trials are experiments in humans; therefore there is an _**ethical imperative **_ to minimize exposure of study subjects to less successful treatment arms:
+
+  + Statistical and ethical considerations may be in conflict.
+  + An allocation providing a "trade-off" between statistical efficiency and ethics may be desirable.
+    
+- Consider a 2-arm _**binary outcome**_ trial ( `\(p_E\)` and `\(p_C\)` are success rates for Experimental and Control groups, respectively)
+
+- Dual objectives:
+    
+  1. To maximize study power (Statistical Objective)
+  2. To minimize number of treatment failures in the study (Ethical Objective)
+    
+---
+
+#  Design Optimization (1 of 2)
+
+- Fixed sample size: `\(n = n_E + n_C\)` ( `\(n_E = \rho n\)` and `\(n_C = (1-\rho)n\)` ).
+
+  - Study goal: to minimize expected number of treatment failures ($ENF = n_Eq_E+n_Cq_C$, where `\(q_E = 1-p_E\)`, `\(q_C = 1-p_C\)`) while maintaining study power (restricting asymptotic variance of `\(\widehat{p}_E-\widehat{p}_C\)`)
+    
+- Constrained optimization `\(^2\)`
+
+`$$\left\{\begin{array}{c}
+\min\limits_{\rho \in (0, 1)}\left\{n(\rho q_E + (1-\rho)q_C)\right\} \\
+\text{s.t. } \frac{p_Eq_E}{n\rho}+\frac{p_Cq_C}{n(1-\rho)} = C\end{array}\right.$$`
+
+( `\(C&gt;0\)` is some constant; optimal solution does not depend on `\(C\)` )
+
+
+.footnote[
+[2] Rosenberger WF, Stallard N, Ivanova A, Harper CN, Ricks ML (2001) "_Optimal adaptive designs for binary response trials_", _Biometrics_ **57**, p. 909-913.
+]
+
+---
+
+#  Design Optimization (2 of 2)
+
+Optimal allocation:
+
+`$$\rho^* = \frac{\sqrt{p_E}}{\sqrt{p_E}+\sqrt{p_C}}$$`
+
+---
+
+# Q &amp; A on Optimal Allocation
+
+&lt;span style="background-color: #2F4F4F; color:white"&gt;
+**Q1**:  What is an attractive feature of the allocation `\(\rho^* = \sqrt{p_E}/(\sqrt{p_E}+\sqrt{p_C})\)`?
+&lt;/span&gt;
+
+&lt;span style="background-color: #708090; color:white"&gt;
+**A1**:  It is always skewed in favor of the more succesfull tratment group (if one exists).
+&lt;/span&gt;
+
+&lt;span style="background-color: #2F4F4F; color:white"&gt;
+**Q2**:  What is a major limitation of the allocation `\(\rho^* = \sqrt{p_E}/(\sqrt{p_E}+\sqrt{p_C})\)`?.
+&lt;/span&gt;
+
+&lt;span style="background-color: #708090; color:white"&gt;
+**A2**:  The model parameters ($p_E$ and `\(p_C\)`) are unknown to us! Therefore, this allocation cannot be implemented directly.
+&lt;/span&gt;
+
+---
+
+# Example -- Comparison of 3 Allocations
+
+Two-arm binary outcome trial, `\(n = 100\)`.
+
+&lt;img src="lecture02_files/figure-html/example-3-binary-allocations-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# What about multi-arm trial? (1 of 2)
+
+- ( `\(K &gt; 2\)` )-arm binary outcome tria.
+- Study goal: to minimize expected treatment failures while restricting the trace of variance-covariance matrix of estimated treatment contrasts.
+
+  - Allocation: `\(\boldsymbol{\rho} = \left(\rho_1, \rho_2, \ldots, \rho_K\right)\)` ( `\(n_k = n\rho_k\)` -- sample size for the `\(k^\text{th}\)` group)
+    
+- Constrained optimization problem:
+
+`$$\left\{
+\begin{array}{c}
+  \min\limits_{\boldsymbol{\rho}}\left\{n\sum_{k = 1}^K{\rho_k q_k}\right\} \\
+  \text{s. t. } \sum_{k=2}^K{\frac{p_kq_k}{\rho_k}}+(K-1)\frac{p_1q_1}{\rho_1} = C \\
+  \text{and } \sum_{k=1}^K{\rho_k} = 1
+\end{array}  
+\right.$$`
+
+  - Optimal solution ("_Fixed trace optimal allocation_"):
+
+`$$\rho_1^* = \frac{\sqrt{(K-1)p_1}}{\sqrt{(K-1)p_1}+\sum_{k=2}^K{\sqrt{p_k}}}\text{  and  } \rho_k^* = \frac{\sqrt{p_k}}{\sqrt{(K-1)p_1}+\sum_{k=2}^K{\sqrt{p_k}}}, \quad k = \overline{2,K}$$`
+---
+
+# What about multi-arm trial? (2 of 2)
+
+- Binary outcome trial, `\(K = 3\)` treatment groups.
+- `\(p_k\)`=probability of a "success" in the `\(k^\text{th}\)` group, `\(k = 1, 2, 3\)`.
+
+&lt;table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;Treatment success probabilities&lt;/div&gt;&lt;/th&gt;
+&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;Optimal allocation proportions `\(^*\)`&lt;/div&gt;&lt;/th&gt;
+&lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; `\(p_1\)` &lt;/th&gt;
+   &lt;th style="text-align:right;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; `\(p_2\)` &lt;/th&gt;
+   &lt;th style="text-align:right;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; `\(p_3\)` &lt;/th&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; `\(\rho^*_1\)` &lt;/th&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; `\(\rho^*_2\)` &lt;/th&gt;
+   &lt;th style="text-align:left;font-weight: bold;color: white !important;background-color: #2F4F4F !important;"&gt; `\(\rho^*_3\)` &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;background-color: #2F4F4F !important;color: white !important;"&gt; 0.10 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: #2F4F4F !important;color: white !important;"&gt; 0.02 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: #2F4F4F !important;color: white !important;"&gt; 0.02 &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: white !important;"&gt;0.613&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: white !important;"&gt;0.194&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: white !important;"&gt;0.194&lt;/span&gt; &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;background-color: #708090 !important;color: white !important;"&gt; 0.10 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: #708090 !important;color: white !important;"&gt; 0.30 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: #708090 !important;color: white !important;"&gt; 0.50 &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #708090 !important;"&gt; &lt;span style="     color: white !important;"&gt;0.263&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #708090 !important;"&gt; &lt;span style="     color: white !important;"&gt;0.322&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #708090 !important;"&gt; &lt;span style="     color: white !important;"&gt;0.415&lt;/span&gt; &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;background-color: #2F4F4F !important;color: white !important;"&gt; 0.30 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: #2F4F4F !important;color: white !important;"&gt; 0.40 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: #2F4F4F !important;color: white !important;"&gt; 0.60 &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: orange !important;"&gt;0.355&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: orange !important;"&gt;0.29&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: orange !important;"&gt;0.355&lt;/span&gt; &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;background-color: #708090 !important;color: white !important;"&gt; 0.40 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: #708090 !important;color: white !important;"&gt; 0.60 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: #708090 !important;color: white !important;"&gt; 0.80 &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #708090 !important;"&gt; &lt;span style="     color: orange !important;"&gt;0.349&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #708090 !important;"&gt; &lt;span style="     color: orange !important;"&gt;0.302&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #708090 !important;"&gt; &lt;span style="     color: orange !important;"&gt;0.349&lt;/span&gt; &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;background-color: #2F4F4F !important;color: white !important;"&gt; 0.70 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: #2F4F4F !important;color: white !important;"&gt; 0.30 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: #2F4F4F !important;color: white !important;"&gt; 0.80 &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: orange !important;"&gt;0.451&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: orange !important;"&gt;0.209&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: orange !important;"&gt;0.341&lt;/span&gt; &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;background-color: #708090 !important;color: white !important;"&gt; 0.90 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: #708090 !important;color: white !important;"&gt; 0.95 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: #708090 !important;color: white !important;"&gt; 0.99 &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #708090 !important;"&gt; &lt;span style="     color: orange !important;"&gt;0.405&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #708090 !important;"&gt; &lt;span style="     color: orange !important;"&gt;0.294&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #708090 !important;"&gt; &lt;span style="     color: orange !important;"&gt;0.3&lt;/span&gt; &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;background-color: #2F4F4F !important;color: white !important;"&gt; 0.35 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: #2F4F4F !important;color: white !important;"&gt; 0.65 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: #2F4F4F !important;color: white !important;"&gt; 0.01 &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: orange !important;"&gt;0.48&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: orange !important;"&gt;0.463&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:left;background-color: #2F4F4F !important;"&gt; &lt;span style="     color: orange !important;"&gt;0.057&lt;/span&gt; &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;span style="background-color: #2F4F4F; color:white"&gt;
+Unlike in the 2-arm case, in the 3-arm case Fixed trace allocation can assign greater proportions to less successful treatments (red rows)
+&lt;/span&gt;
+
+---
+class: inverse, center, middle
+
+# 4. Optimal Designs for Dose-Response Studies
+
+---
+
+# Dose-response study with binary outcome
+
+- Binary outcome: `\(Y = \left\{\begin{array}{cl} 1, &amp; \text{if toxicity} \\ 0, &amp; \text{otherwise} \end{array}\right.\)`
+- _**Logistic (2-parameter) dose-response (DR) curve**_: 
+
+$$ P(d) = \text{Pr}\left(Y=1|d\right)=\frac{1}{1+\exp{\left(-(\alpha+\beta d)\right)}}$$
+
+- `\((\alpha, \beta)\)` -- unknown parameters, `\(\beta &gt; 0\)`.
+- `\(d \in \mathbb{R}\)` (after log-transformation); `\(d_1, \ldots, d_m\)` -- distinct dose levels.
+- `\(n_k\)` observations are made at dose `\(d_k\)`; `\(n = \sum_{k=1}^K{n_k}\)` -- total sample size.
+- `\(\rho_k = n_k/n\)` -- proportions; `\(\rho_k &gt; 0\)` and `\(\sum_{k=1}^K{\rho_k} = 1\)`.
+- We are interested in study designs `\(\xi = \left\{(d_k, \rho_k), \quad k = 1,\ldots, K\right\}\)` that are
+
+  - Optimal for estimating `\((\alpha, \beta)\)` -- entire _DR_ curve.
+  - Optimal for estimating specific percentiles of the _DR_ curve, e.g. `\(d^{(50)} = -\alpha/\beta\)` (dose with 50% toxicity rate).
+
+
+---
+
+# Logistic _DR_ curve -- demo
+
+
 
 ---
 class: inverse, center, middle
